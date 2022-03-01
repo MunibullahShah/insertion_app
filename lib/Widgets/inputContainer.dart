@@ -13,8 +13,8 @@ class InputContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 30,
-      width: 300,
+      height: 43,
+      width: 350,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -23,9 +23,10 @@ class InputContainer extends StatelessWidget {
             width: 10,
           ),
           Container(
-            width: 150,
+            width: 200,
             child: TextField(
               controller: controller,
+              textAlignVertical: TextAlignVertical.center,
               style: TextStyle(fontSize: 12),
               decoration: InputDecoration(
                 border: OutlineInputBorder(
