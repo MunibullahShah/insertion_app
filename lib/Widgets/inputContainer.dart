@@ -9,7 +9,6 @@ class InputContainer extends StatelessWidget {
 
   final TextEditingController controller;
   final String label;
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,8 +23,14 @@ class InputContainer extends StatelessWidget {
           ),
           Container(
             width: 200,
-            child: TextField(
+            child: TextFormField(
               controller: controller,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Required';
+                }
+                return null;
+              },
               textAlignVertical: TextAlignVertical.center,
               style: TextStyle(fontSize: 12),
               decoration: InputDecoration(

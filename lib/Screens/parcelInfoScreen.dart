@@ -34,6 +34,8 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
 
   ParcelInfoApiEntity apiEntity = ParcelInfoApiEntity();
 
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   var status;
   var type;
   var deliveryType;
@@ -55,209 +57,214 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
             ? const Center(
                 child: CircularProgressIndicator(),
               )
-            : Column(
-                children: [
-                  Container(
-                    height: 300,
-                    padding: const EdgeInsets.all(30),
-                    child: Row(
+            : Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Container(
+                      height: 300,
+                      padding: const EdgeInsets.all(30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Column(
+                            children: [
+                              InputContainer(
+                                label: "Sender Name",
+                                controller: senderNameController,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              InputContainer(
+                                label: "Receiver Phone No.",
+                                controller: senderPhoneController,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              InputContainer(
+                                label: "Receiver Address",
+                                controller: senderAddressController,
+                              ),
+                            ],
+                          ),
+                          const VerticalDivider(
+                            thickness: 1,
+                            color: Colors.black,
+                          ),
+                          Column(
+                            children: [
+                              InputContainer(
+                                label: "Receiver Name",
+                                controller: receiverNameController,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              InputContainer(
+                                label: "Receiver Phone No.",
+                                controller: receiverPhoneController,
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              InputContainer(
+                                label: "Receiver Address",
+                                controller: receiverAddressController,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Column(
-                          children: [
-                            InputContainer(
-                              label: "Sender Name",
-                              controller: senderNameController,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            InputContainer(
-                              label: "Receiver Phone No.",
-                              controller: senderPhoneController,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            InputContainer(
-                              label: "Receiver Address",
-                              controller: senderAddressController,
-                            ),
-                          ],
+                        Container(
+                          height: 30,
+                          child: DropdownButton(
+                            items: <String>[
+                              'letter',
+                              'parcel',
+                            ].map((String items) {
+                              return DropdownMenuItem(
+                                value: items,
+                                child: Text(items),
+                              );
+                            }).toList(),
+                            value: type,
+                            hint: const Text("type"),
+                            icon: const Icon(Icons.keyboard_arrow_down),
+                            onChanged: (value) {
+                              setState(() {
+                                type = value as String;
+                              });
+                            },
+                          ),
                         ),
-                        const VerticalDivider(
-                          thickness: 1,
-                          color: Colors.black,
+                        Container(
+                          height: 30,
+                          child: DropdownButton(
+                            items: <String>[
+                              'XS',
+                              'S',
+                              'M',
+                              'L',
+                              'XL',
+                              'XXL',
+                            ].map((String items) {
+                              return DropdownMenuItem(
+                                value: items,
+                                child: Text(items),
+                              );
+                            }).toList(),
+                            value: parcelSize,
+                            hint: const Text("Size"),
+                            icon: const Icon(Icons.keyboard_arrow_down),
+                            onChanged: (value) {
+                              setState(() {
+                                parcelSize = value as String;
+                              });
+                            },
+                          ),
                         ),
-                        Column(
-                          children: [
-                            InputContainer(
-                              label: "Receiver Name",
-                              controller: receiverNameController,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            InputContainer(
-                              label: "Receiver Phone No.",
-                              controller: receiverPhoneController,
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            InputContainer(
-                              label: "Receiver Address",
-                              controller: receiverAddressController,
-                            ),
-                          ],
+                        Container(
+                          height: 30,
+                          width: 200,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text("Parcel weight: "),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Container(
+                                width: 50,
+                                child: TextField(
+                                  controller: weightController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Container(
-                        height: 30,
-                        child: DropdownButton(
-                          items: <String>[
-                            'letter',
-                            'parcel',
-                          ].map((String items) {
-                            return DropdownMenuItem(
-                              value: items,
-                              child: Text(items),
-                            );
-                          }).toList(),
-                          value: type,
-                          hint: const Text("type"),
-                          icon: const Icon(Icons.keyboard_arrow_down),
-                          onChanged: (value) {
-                            setState(() {
-                              type = value as String;
-                            });
-                          },
-                        ),
-                      ),
-                      Container(
-                        height: 30,
-                        child: DropdownButton(
-                          items: <String>[
-                            'XS',
-                            'S',
-                            'M',
-                            'L',
-                            'XL',
-                            'XXL',
-                          ].map((String items) {
-                            return DropdownMenuItem(
-                              value: items,
-                              child: Text(items),
-                            );
-                          }).toList(),
-                          value: parcelSize,
-                          hint: const Text("Size"),
-                          icon: const Icon(Icons.keyboard_arrow_down),
-                          onChanged: (value) {
-                            setState(() {
-                              parcelSize = value as String;
-                            });
-                          },
-                        ),
-                      ),
-                      Container(
-                        height: 30,
-                        width: 200,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text("Parcel weight: "),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Container(
-                              width: 50,
-                              child: TextField(
-                                controller: weightController,
-                                decoration: InputDecoration(
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Container(
-                        height: 30,
-                        child: DropdownButton(
-                          items: <String>[
-                            'Delivery',
-                            'Pickup',
-                          ].map((String items) {
-                            return DropdownMenuItem(
-                              value: items,
-                              child: Text(items),
-                            );
-                          }).toList(),
-                          value: deliveryType,
-                          hint: const Text("Select Delivery Type"),
-                          icon: const Icon(Icons.keyboard_arrow_down),
-                          onChanged: (value) {
-                            setState(() {
-                              deliveryType = value as String;
-                            });
-                          },
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 200,
-                      ),
-                      Container(
-                        height: 30,
-                        child: DropdownButton(
-                          items: <String>[
-                            'Received',
-                            'Scheduling',
-                            'Scheduled',
-                            'Delivering',
-                            'Delivered',
-                          ].map((String items) {
-                            return DropdownMenuItem(
-                              value: items,
-                              child: Text(items),
-                            );
-                          }).toList(),
-                          value: status,
-                          hint: const Text("status"),
-                          icon: const Icon(Icons.keyboard_arrow_down),
-                          onChanged: (value) {
-                            setState(() {
-                              status = value as String;
-                            });
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  GestureDetector(
-                    child: Container(
-                      child: Text("Submit"),
+                    const SizedBox(
+                      height: 10,
                     ),
-                    onTap: () {
-                      sendData();
-                    },
-                  ),
-                ],
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Container(
+                          height: 30,
+                          child: DropdownButton(
+                            items: <String>[
+                              'Delivery',
+                              'Pickup',
+                            ].map((String items) {
+                              return DropdownMenuItem(
+                                value: items,
+                                child: Text(items),
+                              );
+                            }).toList(),
+                            value: deliveryType,
+                            hint: const Text("Select Delivery Type"),
+                            icon: const Icon(Icons.keyboard_arrow_down),
+                            onChanged: (value) {
+                              setState(() {
+                                deliveryType = value as String;
+                              });
+                            },
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 200,
+                        ),
+                        Container(
+                          height: 30,
+                          child: DropdownButton(
+                            items: <String>[
+                              'Received',
+                              'Scheduling',
+                              'Scheduled',
+                              'Delivering',
+                              'Delivered',
+                            ].map((String items) {
+                              return DropdownMenuItem(
+                                value: items,
+                                child: Text(items),
+                              );
+                            }).toList(),
+                            value: status,
+                            hint: const Text("status"),
+                            icon: const Icon(Icons.keyboard_arrow_down),
+                            onChanged: (value) {
+                              setState(() {
+                                status = value as String;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    GestureDetector(
+                      child: Container(
+                        child: Text("Submit"),
+                      ),
+                      onTap: () {
+                        if (_formKey.currentState!.validate()) {
+                          sendData();
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
       ),
     );
