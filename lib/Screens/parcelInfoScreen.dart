@@ -77,14 +77,14 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
                                 height: 10,
                               ),
                               InputContainer(
-                                label: "Receiver Phone No.",
+                                label: "Sender Phone No.",
                                 controller: senderPhoneController,
                               ),
                               const SizedBox(
                                 height: 10,
                               ),
                               InputContainer(
-                                label: "Receiver Address",
+                                label: "Sender Address",
                                 controller: senderAddressController,
                               ),
                             ],
@@ -258,9 +258,9 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
                         child: Text("Submit"),
                       ),
                       onTap: () {
-                        if (_formKey.currentState!.validate()) {
-                          sendData();
-                        }
+                        // if (_formKey.currentState!.validate()) {
+                        sendData();
+                        // }
                       },
                     ),
                   ],
@@ -275,7 +275,7 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
         'https://nominatim.openstreetmap.org/search?q=\"+${receiverAddressController.text}+\"&format=geojson'));
 
     if (response.statusCode == 200) {
-      print('respone: ${response.body}');
+      //print('respone: ${response.body}');
       _osmapiclassEntity =
           OSMAPICLASSEntity.fromJson(jsonDecode(response.body));
       if (_osmapiclassEntity.features.isEmpty) {
@@ -295,8 +295,11 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
     setState(() {
       isLoading = !isLoading;
     });
-    getLocation();
-    if (longitude != null) {
+    try {
+      // var response = await http
+      //     .get(Uri.parse("https://idms.backend.eastdevs.com/api/parcels/"));
+      // getLocation();
+      // if (longitude != null) {
       var response = await http.post(
           Uri.parse('https://idms.backend.eastdevs.com/api/parcels/'),
           body: jsonEncode(<String, dynamic>{
@@ -318,9 +321,16 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
           }));
       print(response.statusCode);
       print(response.body);
+      // }
+      setState(() {
+        isLoading = !isLoading;
+      });
+    } catch (e) {
+      print(e);
+
+      setState(() {
+        isLoading = false;
+      });
     }
-    setState(() {
-      isLoading = !isLoading;
-    });
   }
 }
