@@ -29,6 +29,8 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
   TextEditingController receiverPhoneController = TextEditingController();
 
   TextEditingController weightController = TextEditingController();
+  TextEditingController longitudeController = TextEditingController();
+  TextEditingController latitudeController = TextEditingController();
 
   OSMAPICLASSEntity _osmapiclassEntity = OSMAPICLASSEntity();
 
@@ -39,8 +41,8 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
   var status;
   var type;
   var deliveryType;
-  var longitude;
-  var latitude;
+  double longitude = 0;
+  double latitude = 0;
 
   bool isLoading = false;
   bool isFound = true;
@@ -59,13 +61,13 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
               )
             : Form(
                 key: _formKey,
-                child: Column(
+                child: ListView(
                   children: [
                     Container(
-                      height: 300,
+                      height: 320,
                       padding: const EdgeInsets.all(30),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
                         children: [
                           Column(
                             children: [
@@ -113,6 +115,20 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
                                 label: "Receiver Address",
                                 controller: receiverAddressController,
                               ),
+                              isFound
+                                  ? const SizedBox(
+                                      height: 1,
+                                    )
+                                  : Column(
+                                      children: [
+                                        InputContainer(
+                                            controller: longitudeController,
+                                            label: 'Longitude'),
+                                        InputContainer(
+                                            controller: latitudeController,
+                                            label: "latitude"),
+                                      ],
+                                    ),
                             ],
                           ),
                         ],
@@ -224,7 +240,7 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
                           ),
                         ),
                         const SizedBox(
-                          width: 200,
+                          width: 150,
                         ),
                         Container(
                           height: 30,
@@ -255,12 +271,20 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
                     ),
                     GestureDetector(
                       child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        alignment: Alignment.center,
+                        height: 30,
+                        width: 70,
                         child: Text("Submit"),
                       ),
                       onTap: () {
-                        // if (_formKey.currentState!.validate()) {
-                        sendData();
-                        // }
+                        if (_formKey.currentState!.validate()) {
+                          apiEntity.data = ParcelInfoApiData();
+                          sendData();
+                        }
                       },
                     ),
                   ],
@@ -275,19 +299,22 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
         'https://nominatim.openstreetmap.org/search?q=\"+${receiverAddressController.text}+\"&format=geojson'));
 
     if (response.statusCode == 200) {
-      //print('respone: ${response.body}');
+//      print('respone: ${response.body}');
       _osmapiclassEntity =
           OSMAPICLASSEntity.fromJson(jsonDecode(response.body));
       if (_osmapiclassEntity.features.isEmpty) {
-        Fluttertoast.showToast(msg: 'Error getting location');
-        isFound = false;
+        setState(() {
+          isFound = false;
+        });
       } else {
-        longitude = _osmapiclassEntity.features.first.geometry.coordinates[0];
+        longitude = (_osmapiclassEntity.features.first.geometry.coordinates[0]);
         latitude = _osmapiclassEntity.features.first.geometry.coordinates[1];
+        setState(() {});
       }
     } else {
       print(response.statusCode);
       Fluttertoast.showToast(msg: 'Error getting location');
+      isFound = false;
     }
   }
 
@@ -296,37 +323,41 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
       isLoading = !isLoading;
     });
     try {
-      // var response = await http
-      //     .get(Uri.parse("https://idms.backend.eastdevs.com/api/parcels/"));
-      // getLocation();
-      // if (longitude != null) {
-      var response = await http.post(
-          Uri.parse('https://idms.backend.eastdevs.com/api/parcels/'),
-          body: jsonEncode(<String, dynamic>{
-            "data": {
-              "senderName": senderNameController.text,
-              "longitude": longitude,
-              "latitude": latitude,
-              "address": receiverAddressController.text,
-              "senderContact": senderPhoneController.text,
-              "receiverContact": receiverPhoneController.text,
-              "addedBy": '',
-              "receiverName": receiverNameController.text,
-              "type": type,
-              "parcelSize": parcelSize,
-              "parcelWeight": weightController.text,
-              "status": status,
-              "deliveryType": deliveryType,
-            }
-          }));
-      print(response.statusCode);
-      print(response.body);
-      // }
+      getLocation();
+      if (!isFound) {
+        apiEntity.data.longitude = double.parse(longitudeController.text);
+        apiEntity.data.latitude = double.parse(latitudeController.text);
+      }
+
+      {
+        apiEntity.data.senderName = senderNameController.text;
+        apiEntity.data.address = receiverAddressController.text;
+        apiEntity.data.senderContact = senderPhoneController.text;
+        apiEntity.data.receiverContact = receiverPhoneController.text;
+        apiEntity.data.addedBy = "";
+        apiEntity.data.receiverName = receiverNameController.text;
+        apiEntity.data.type = type;
+        apiEntity.data.parcelSize = parcelSize;
+        apiEntity.data.parcelWeight = weightController.text;
+        apiEntity.data.status = status;
+        apiEntity.data.deliveryType = deliveryType;
+      }
+
+      var encode = jsonEncode(apiEntity.data.toJson());
+      if (longitude != null) {
+        Fluttertoast.showToast(msg: 'Error getting coordinates');
+        var response = await http.post(
+            Uri.parse('https://idms.backend.eastdevs.com/api/parcels/'),
+            body:
+                jsonEncode(<String, dynamic>{"data": apiEntity.data.toJson()}));
+        print(response.statusCode);
+        print(response.body);
+      }
       setState(() {
         isLoading = !isLoading;
       });
     } catch (e) {
-      print(e);
+      print("Exception: $e");
 
       setState(() {
         isLoading = false;
