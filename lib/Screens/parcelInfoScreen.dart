@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
@@ -141,8 +142,8 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
                           height: 30,
                           child: DropdownButton(
                             items: <String>[
-                              'letter',
-                              'parcel',
+                              'Letter',
+                              'Parcel',
                             ].map((String items) {
                               return DropdownMenuItem(
                                 value: items,
@@ -282,8 +283,10 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
                       ),
                       onTap: () {
                         if (_formKey.currentState!.validate()) {
-                          apiEntity.data = ParcelInfoApiData();
-                          sendData();
+                          setState(() {
+                            isLoading = !isLoading;
+                          });
+                          getLocation();
                         }
                       },
                     ),
@@ -302,56 +305,92 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
 //      print('respone: ${response.body}');
       _osmapiclassEntity =
           OSMAPICLASSEntity.fromJson(jsonDecode(response.body));
-      if (_osmapiclassEntity.features.isEmpty) {
+      if (_osmapiclassEntity.features.isEmpty && isFound) {
         setState(() {
           isFound = false;
         });
+        return;
+      } else if (!isFound && latitudeController.text != null) {
+        sendData();
       } else {
         longitude = (_osmapiclassEntity.features.first.geometry.coordinates[0]);
         latitude = _osmapiclassEntity.features.first.geometry.coordinates[1];
-        setState(() {});
+        sendData();
       }
     } else {
       print(response.statusCode);
       Fluttertoast.showToast(msg: 'Error getting location');
-      isFound = false;
+      setState(() {
+        isFound = false;
+      });
     }
   }
 
   sendData() async {
-    setState(() {
-      isLoading = !isLoading;
-    });
     try {
-      getLocation();
+      //getLocation();
       if (!isFound) {
         apiEntity.data.longitude = double.parse(longitudeController.text);
         apiEntity.data.latitude = double.parse(latitudeController.text);
       }
-
-      {
-        apiEntity.data.senderName = senderNameController.text;
-        apiEntity.data.address = receiverAddressController.text;
-        apiEntity.data.senderContact = senderPhoneController.text;
-        apiEntity.data.receiverContact = receiverPhoneController.text;
-        apiEntity.data.addedBy = "";
-        apiEntity.data.receiverName = receiverNameController.text;
-        apiEntity.data.type = type;
-        apiEntity.data.parcelSize = parcelSize;
-        apiEntity.data.parcelWeight = weightController.text;
-        apiEntity.data.status = status;
-        apiEntity.data.deliveryType = deliveryType;
-      }
-
-      var encode = jsonEncode(apiEntity.data.toJson());
       if (longitude != null) {
-        Fluttertoast.showToast(msg: 'Error getting coordinates');
-        var response = await http.post(
-            Uri.parse('https://idms.backend.eastdevs.com/api/parcels/'),
-            body:
-                jsonEncode(<String, dynamic>{"data": apiEntity.data.toJson()}));
-        print(response.statusCode);
-        print(response.body);
+        Map<String, dynamic> formData = {
+          "senderName": senderNameController.text,
+          "longitude": latitude,
+          "latitude": longitude,
+          "address": receiverAddressController.text,
+          "senderContact": senderPhoneController.text,
+          "receiverContact": receiverPhoneController.text,
+          "addedBy": "addedBy",
+          "receiverName": receiverNameController.text,
+          "type": type.toString(),
+          "parcelSize": parcelSize.toString(),
+          "parcelWeight": weightController.text,
+          "status": status.toString(),
+          "deliveryType": deliveryType.toString(),
+          "employee": 1
+        };
+
+        String str = json.encode(formData);
+        try {
+          var response = await Dio().post(
+              "https://idms.backend.eastdevs.com/api/parcels",
+              data: <String, Map<String, dynamic>>{'data': formData});
+          print(response.data);
+          setState(() {
+            isLoading = !isLoading;
+          });
+        } catch (e) {
+          setState(() {
+            isLoading = !isLoading;
+          });
+          print(e.toString());
+        }
+        return 1;
+
+        // Map<String, dynamic> formData = {
+        //   "senderName": senderNameController.text,
+        //   "longitude": latitude,
+        //   "latitude": longitude,
+        //   "address": receiverAddressController.text,
+        //   "senderContact": senderPhoneController.text,
+        //   "receiverContact": receiverPhoneController.text,
+        //   "addedBy": "addedBy",
+        //   "receiverName": receiverNameController.text,
+        //   "type": type,
+        //   "parcelSize": parcelSize,
+        //   "parcelWeight": weightController.text,
+        //   "status": status,
+        //   "deliveryType": deliveryType,
+        //   "employee": 1
+        // };
+        //
+        // var response = await Dio().post(
+        //     "https://idms.backend.eastdevs.com/api/parcels",
+        //     data: <String, Map<String, dynamic>>{'data': formData});
+        //
+        // print(response.statusCode);
+        // print(response.data);
       }
       setState(() {
         isLoading = !isLoading;
