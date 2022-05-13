@@ -4,6 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:insertion_app/Screens/HomeRequestScreen.dart';
+import 'package:insertion_app/Screens/ProfileScreen.dart';
 import 'package:insertion_app/apiClasses/OSM_API_CLASS_entity.dart';
 import 'package:insertion_app/apiClasses/parcel_info_api_entity.dart';
 
@@ -51,24 +53,58 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Parcel Data Insertion"),
-      ),
-      body: SafeArea(
-        child: isLoading
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Parcel Data Insertion"),
+          actions: [
+            Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.only(right: 10),
+              child: RaisedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProfileScreen(),
+                    ),
+                  );
+                  print("Hello");
+                },
+                child: Text("Profile"),
+              ),
+            ),
+            Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.only(right: 10),
+              child: RaisedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomeScreenRequestScreen()),
+                  );
+                  print("Hello");
+                },
+                child: Text("Logout"),
+              ),
+            ),
+          ],
+        ),
+        body: isLoading
             ? const Center(
                 child: CircularProgressIndicator(),
               )
             : Form(
                 key: _formKey,
-                child: ListView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Container(
                       height: 320,
                       padding: const EdgeInsets.all(30),
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Column(
                             children: [
@@ -270,25 +306,25 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
                         ),
                       ],
                     ),
-                    GestureDetector(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        alignment: Alignment.center,
-                        height: 30,
-                        width: 70,
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      alignment: Alignment.center,
+                      height: 30,
+                      width: 70,
+                      child: GestureDetector(
+                        onTap: () {
+                          if (_formKey.currentState!.validate()) {
+                            setState(() {
+                              isLoading = !isLoading;
+                            });
+                            getLocation();
+                          }
+                        },
                         child: Text("Submit"),
                       ),
-                      onTap: () {
-                        if (_formKey.currentState!.validate()) {
-                          setState(() {
-                            isLoading = !isLoading;
-                          });
-                          getLocation();
-                        }
-                      },
                     ),
                   ],
                 ),
@@ -358,7 +394,15 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
               data: <String, Map<String, dynamic>>{'data': formData});
           print(response.data);
           setState(() {
+            weightController.clear();
+            receiverNameController.clear();
+            senderNameController.clear();
+            receiverPhoneController.clear();
+            senderPhoneController.clear();
+            receiverAddressController.clear();
+            senderAddressController.clear();
             isLoading = !isLoading;
+            _formKey.currentState!.reset();
           });
         } catch (e) {
           setState(() {
@@ -367,30 +411,6 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
           print(e.toString());
         }
         return 1;
-
-        // Map<String, dynamic> formData = {
-        //   "senderName": senderNameController.text,
-        //   "longitude": latitude,
-        //   "latitude": longitude,
-        //   "address": receiverAddressController.text,
-        //   "senderContact": senderPhoneController.text,
-        //   "receiverContact": receiverPhoneController.text,
-        //   "addedBy": "addedBy",
-        //   "receiverName": receiverNameController.text,
-        //   "type": type,
-        //   "parcelSize": parcelSize,
-        //   "parcelWeight": weightController.text,
-        //   "status": status,
-        //   "deliveryType": deliveryType,
-        //   "employee": 1
-        // };
-        //
-        // var response = await Dio().post(
-        //     "https://idms.backend.eastdevs.com/api/parcels",
-        //     data: <String, Map<String, dynamic>>{'data': formData});
-        //
-        // print(response.statusCode);
-        // print(response.data);
       }
       setState(() {
         isLoading = !isLoading;

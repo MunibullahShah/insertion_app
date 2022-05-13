@@ -28,6 +28,9 @@ class InputContainer extends StatelessWidget {
             width: 200,
             //height: 40,
             child: TextFormField(
+              obscureText: label == 'Password' ? true : false,
+              maxLines: (label == 'Password' || label == 'Email') ? 1 : 3,
+              minLines: 1,
               controller: controller,
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -40,7 +43,7 @@ class InputContainer extends StatelessWidget {
                 }
               },
               textAlignVertical: TextAlignVertical.center,
-              style: TextStyle(fontSize: 12),
+              style: TextStyle(fontSize: 14),
               decoration: InputDecoration(
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),

@@ -1,4 +1,9 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:insertion_app/Screens/parcelInfoScreen.dart';
 import 'package:insertion_app/Widgets/inputContainer.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -60,11 +65,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   alignment: Alignment.center,
                   child:
-                      isLoading ? CircularProgressIndicator() : Text("Submit"),
+                      isLoading ? CircularProgressIndicator() : Text("Login"),
                 ),
                 onTap: () {
+                  print("tapped");
                   if (_formKey.currentState!.validate()) {
-                    // sendData();
+                    setState(() {
+                      isLoading = true;
+                    });
+                    login();
                   }
                 },
               ),
@@ -73,5 +82,29 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  login() async {
+    String password = passwordController.text;
+    String email = emailController.text;
+    print("EMail: $email, Password: $password");
+    try {
+      var response = await Dio().post(
+          "https://idms.backend.eastdevs.com/api/auth/local",
+          data: {"identifier": email, "password": password});
+      if (response.statusCode == 200) {
+        var resp = await Dio().get(
+            "http://idms.backend.eastdevs.com/api/employees?filters[email][\$eq]=$email");
+        if (resp.statusCode == 200) {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => ParcelInfoScreen()));
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+    setState(() {
+      isLoading = false;
+    });
   }
 }

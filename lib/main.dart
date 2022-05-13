@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:insertion_app/Screens/HomeRequestScreen.dart';
+import 'package:insertion_app/Screens/ProfileScreen.dart';
 import 'package:insertion_app/Screens/login.dart';
 import 'package:insertion_app/Screens/parcelInfoScreen.dart';
 
@@ -17,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ParcelInfoScreen(),
+      home: HomeScreenRequestScreen(),
     );
   }
 }
