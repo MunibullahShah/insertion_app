@@ -54,6 +54,12 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromRGBO(
+        230,
+        242,
+        255,
+        1,
+      ),
       appBar: AppBar(
         title: const Text("Home Page"),
         actions: [
@@ -61,12 +67,12 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
             alignment: Alignment.center,
             padding: EdgeInsets.only(right: 10),
             child: RaisedButton(
+              color: Color.fromRGBO(0, 153, 51, 1),
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => LoginScreen()),
                 );
-                print("Hello");
               },
               child: Text("Login"),
             ),
@@ -78,204 +84,315 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
             ? const Center(
                 child: CircularProgressIndicator(),
               )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Center(
-                    child: Text(
-                      "Hello World",
-                      style: TextStyle(fontSize: 30),
-                    ),
+            : Center(
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.75,
+                  width: MediaQuery.of(context).size.width * 0.90,
+                  decoration: BoxDecoration(
+                    color: Color.fromRGBO(255, 214, 77, 1),
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey,
+                        offset: Offset(5.0, 5.0),
+                      )
+                    ],
                   ),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Container(
-                          height: 300,
-                          padding: const EdgeInsets.fromLTRB(0, 30, 30, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Column(
-                                children: [
-                                  InputContainer(
-                                    label: "Sender Name",
-                                    controller: senderNameController,
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  InputContainer(
-                                    label: "Sender Phone No.",
-                                    controller: senderPhoneController,
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  InputContainer(
-                                    label: "Sender Address",
-                                    controller: senderAddressController,
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Column(
-                                children: [
-                                  InputContainer(
-                                    label: "Receiver Name",
-                                    controller: receiverNameController,
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  InputContainer(
-                                    label: "Receiver Phone No.",
-                                    controller: receiverPhoneController,
-                                  ),
-                                  const SizedBox(
-                                    height: 10,
-                                  ),
-                                  InputContainer(
-                                    label: "Receiver Address",
-                                    controller: receiverAddressController,
-                                  ),
-                                  isFound
-                                      ? const SizedBox(
-                                          height: 1,
-                                        )
-                                      : Column(
-                                          children: [
-                                            InputContainer(
-                                                controller: longitudeController,
-                                                label: 'Longitude'),
-                                            InputContainer(
-                                                controller: latitudeController,
-                                                label: "latitude"),
-                                          ],
-                                        ),
-                                ],
-                              ),
-                            ],
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Center(
+                          child: Container(
+                            child: Image(
+                              image: AssetImage("aaaa.png"),
+                            ),
                           ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              height: 30,
-                              child: DropdownButton(
-                                items: <String>[
-                                  'Letter',
-                                  'Parcel',
-                                ].map((String items) {
-                                  return DropdownMenuItem(
-                                    value: items,
-                                    child: Text(items),
-                                  );
-                                }).toList(),
-                                value: type,
-                                hint: const Text("type"),
-                                icon: const Icon(Icons.keyboard_arrow_down),
-                                onChanged: (value) {
-                                  setState(() {
-                                    type = value as String;
-                                  });
-                                },
+                      ),
+                      Expanded(
+                        child: Center(
+                            child: Form(
+                          key: _formKey,
+                          child: Container(
+                            padding: const EdgeInsets.fromLTRB(
+                              15,
+                              30,
+                              15,
+                              0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(15),
+                                bottomRight: Radius.circular(15),
                               ),
                             ),
-                            SizedBox(
-                              width: 30,
-                            ),
-                            Container(
-                              height: 30,
-                              child: DropdownButton(
-                                items: <String>[
-                                  'XS',
-                                  'S',
-                                  'M',
-                                  'L',
-                                  'XL',
-                                  'XXL',
-                                ].map((String items) {
-                                  return DropdownMenuItem(
-                                    value: items,
-                                    child: Text(items),
-                                  );
-                                }).toList(),
-                                value: parcelSize,
-                                hint: const Text("Size"),
-                                icon: const Icon(Icons.keyboard_arrow_down),
-                                onChanged: (value) {
-                                  setState(() {
-                                    parcelSize = value as String;
-                                  });
-                                },
-                              ),
-                            ),
-                            SizedBox(
-                              width: 30,
-                            ),
-                            Container(
-                              height: 30,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text("Parcel weight: "),
-                                  const SizedBox(
-                                    width: 10,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  child: Text(
+                                    "Parcel Info for Pickup",
+                                    style: TextStyle(fontSize: 27),
                                   ),
-                                  Container(
-                                    width: 50,
-                                    child: TextField(
-                                      controller: weightController,
-                                      textAlign: TextAlign.center,
-                                      textAlignVertical:
-                                          TextAlignVertical.center,
-                                      decoration: InputDecoration(
-                                        border: OutlineInputBorder(
+                                ),
+                                Container(
+                                  height: 300,
+                                  padding:
+                                      const EdgeInsets.fromLTRB(8, 30, 10, 0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          InputContainer(
+                                            label: "Sender Name",
+                                            controller: senderNameController,
+                                            hintText: "John Doe",
+                                          ),
+                                          const SizedBox(
+                                            height: 20,
+                                          ),
+                                          InputContainer(
+                                            label: "Sender Phone No.",
+                                            controller: senderPhoneController,
+                                            hintText: "12345",
+                                          ),
+                                          const SizedBox(
+                                            height: 20,
+                                          ),
+                                          InputContainer(
+                                            label: "Sender Address",
+                                            controller: senderAddressController,
+                                            hintText: "Address",
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Column(
+                                        children: [
+                                          InputContainer(
+                                              label: "Receiver Name",
+                                              controller:
+                                                  receiverNameController,
+                                              hintText: "John Dree"),
+                                          const SizedBox(
+                                            height: 20,
+                                          ),
+                                          InputContainer(
+                                            label: "Receiver Phone No.",
+                                            controller: receiverPhoneController,
+                                            hintText: "1235543",
+                                          ),
+                                          const SizedBox(
+                                            height: 20,
+                                          ),
+                                          InputContainer(
+                                            label: "Receiver Address",
+                                            controller:
+                                                receiverAddressController,
+                                            hintText: "Address",
+                                          ),
+                                          isFound
+                                              ? const SizedBox(
+                                                  height: 1,
+                                                )
+                                              : Column(
+                                                  children: [
+                                                    InputContainer(
+                                                      controller:
+                                                          longitudeController,
+                                                      label: 'Longitude',
+                                                      hintText: 'longitude',
+                                                    ),
+                                                    InputContainer(
+                                                      controller:
+                                                          latitudeController,
+                                                      label: "latitude",
+                                                      hintText: "latitude",
+                                                    ),
+                                                  ],
+                                                ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        alignment: Alignment.center,
+                                        width: 120,
+                                        padding:
+                                            EdgeInsets.fromLTRB(5, 0, 0, 10),
+                                        decoration: BoxDecoration(
+                                          color: Color.fromRGBO(
+                                            230,
+                                            242,
+                                            255,
+                                            1,
+                                          ),
                                           borderRadius:
                                               BorderRadius.circular(8),
                                         ),
+                                        height: 30,
+                                        child: DropdownButton(
+                                          alignment: Alignment.center,
+                                          underline:
+                                              DropdownButtonHideUnderline(
+                                                  child: Container()),
+                                          items: <String>[
+                                            'Letter',
+                                            'Parcel',
+                                          ].map((String items) {
+                                            return DropdownMenuItem(
+                                              value: items,
+                                              child: Text(items),
+                                            );
+                                          }).toList(),
+                                          value: type,
+                                          hint: const Text("Type"),
+                                          icon: const Icon(
+                                              Icons.keyboard_arrow_down),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              type = value as String;
+                                            });
+                                          },
+                                        ),
                                       ),
+                                      SizedBox(
+                                        width: 25,
+                                      ),
+                                      Container(
+                                        padding:
+                                            EdgeInsets.fromLTRB(5, 0, 0, 10),
+                                        decoration: BoxDecoration(
+                                          color: Color.fromRGBO(
+                                            230,
+                                            242,
+                                            255,
+                                            1,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        height: 30,
+                                        child: DropdownButton(
+                                          alignment: Alignment.center,
+                                          underline:
+                                              DropdownButtonHideUnderline(
+                                            child: Container(),
+                                          ),
+                                          items: <String>[
+                                            'XS',
+                                            'S',
+                                            'M',
+                                            'L',
+                                            'XL',
+                                            'XXL',
+                                          ].map((String items) {
+                                            return DropdownMenuItem(
+                                              value: items,
+                                              child: Text(items),
+                                            );
+                                          }).toList(),
+                                          value: parcelSize,
+                                          hint: const Text("Size"),
+                                          icon: const Icon(
+                                              Icons.keyboard_arrow_down),
+                                          onChanged: (value) {
+                                            setState(() {
+                                              parcelSize = value as String;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 30,
+                                      ),
+                                      Container(
+                                        padding:
+                                            EdgeInsets.fromLTRB(5, 0, 0, 10),
+                                        decoration: BoxDecoration(
+                                          color: Color.fromRGBO(
+                                            230,
+                                            242,
+                                            255,
+                                            1,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        height: 30,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            const Text("Parcel weight: "),
+                                            const SizedBox(
+                                              width: 10,
+                                            ),
+                                            Container(
+                                              width: 50,
+                                              child: TextField(
+                                                controller: weightController,
+                                                textAlign: TextAlign.center,
+                                                textAlignVertical:
+                                                    TextAlignVertical.center,
+                                                decoration: InputDecoration(
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8),
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                GestureDetector(
+                                  child: Container(
+                                    height: 30,
+                                    width: 70,
+                                    decoration: BoxDecoration(
+                                      color: Color.fromRGBO(0, 153, 51, 1),
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
-                                  )
-                                ],
-                              ),
+                                    alignment: Alignment.center,
+                                    child: Text("Submit"),
+                                  ),
+                                  onTap: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      setState(() {
+                                        isLoading = !isLoading;
+                                      });
+                                      getLocation();
+                                    }
+                                  },
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        GestureDetector(
-                          child: Container(
-                            height: 30,
-                            width: 70,
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            alignment: Alignment.center,
-                            child: Text("Submit"),
                           ),
-                          onTap: () {
-                            if (_formKey.currentState!.validate()) {
-                              setState(() {
-                                isLoading = !isLoading;
-                              });
-                              getLocation();
-                            }
-                          },
-                        ),
-                      ],
-                    ),
+                        )),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
       ),
     );

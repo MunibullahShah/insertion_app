@@ -82,6 +82,22 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
+                      builder: (context) => ProfileScreen(),
+                    ),
+                  );
+                  print("Parcels");
+                },
+                child: Text("Parcels"),
+              ),
+            ),
+            Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.only(right: 10),
+              child: RaisedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
                         builder: (context) => HomeScreenRequestScreen()),
                   );
                   print("Hello");
@@ -111,20 +127,23 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
                               InputContainer(
                                 label: "Sender Name",
                                 controller: senderNameController,
+                                hintText: "John Doe",
                               ),
                               const SizedBox(
-                                height: 10,
+                                height: 20,
                               ),
                               InputContainer(
                                 label: "Sender Phone No.",
                                 controller: senderPhoneController,
+                                hintText: "12345",
                               ),
                               const SizedBox(
-                                height: 10,
+                                height: 20,
                               ),
                               InputContainer(
                                 label: "Sender Address",
                                 controller: senderAddressController,
+                                hintText: "Address",
                               ),
                             ],
                           ),
@@ -135,22 +154,24 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
                           Column(
                             children: [
                               InputContainer(
-                                label: "Receiver Name",
-                                controller: receiverNameController,
-                              ),
+                                  label: "Receiver Name",
+                                  controller: receiverNameController,
+                                  hintText: "John Dree"),
                               const SizedBox(
-                                height: 10,
+                                height: 20,
                               ),
                               InputContainer(
                                 label: "Receiver Phone No.",
                                 controller: receiverPhoneController,
+                                hintText: "1235543",
                               ),
                               const SizedBox(
-                                height: 10,
+                                height: 20,
                               ),
                               InputContainer(
                                 label: "Receiver Address",
                                 controller: receiverAddressController,
+                                hintText: "Address",
                               ),
                               isFound
                                   ? const SizedBox(
@@ -159,11 +180,15 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
                                   : Column(
                                       children: [
                                         InputContainer(
-                                            controller: longitudeController,
-                                            label: 'Longitude'),
+                                          controller: longitudeController,
+                                          label: 'Longitude',
+                                          hintText: 'longitude',
+                                        ),
                                         InputContainer(
-                                            controller: latitudeController,
-                                            label: "latitude"),
+                                          controller: latitudeController,
+                                          label: "latitude",
+                                          hintText: "latitude",
+                                        ),
                                       ],
                                     ),
                             ],
@@ -308,7 +333,12 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
                     ),
                     Container(
                       decoration: BoxDecoration(
-                        color: Colors.blue,
+                        color: Color.fromRGBO(
+                          230,
+                          242,
+                          255,
+                          1,
+                        ),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       alignment: Alignment.center,

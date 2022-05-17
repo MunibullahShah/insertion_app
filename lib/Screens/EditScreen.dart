@@ -112,6 +112,7 @@ class _EditScreenState extends State<EditScreen> {
                             InputContainer(
                               controller: nameController,
                               label: "Name",
+                              hintText: "Name",
                             ),
                             SizedBox(
                               height: 10,
@@ -119,6 +120,7 @@ class _EditScreenState extends State<EditScreen> {
                             InputContainer(
                               controller: addressController,
                               label: "Address",
+                              hintText: "address",
                             ),
                             SizedBox(
                               height: 10,
@@ -126,6 +128,7 @@ class _EditScreenState extends State<EditScreen> {
                             InputContainer(
                               controller: phoneController,
                               label: "Phone",
+                              hintText: "123434",
                             ),
                             SizedBox(
                               height: 10,
@@ -133,6 +136,7 @@ class _EditScreenState extends State<EditScreen> {
                             InputContainer(
                               controller: nicController,
                               label: "NIC",
+                              hintText: "12345",
                             ),
                             const SizedBox(
                               height: 10,
@@ -142,7 +146,12 @@ class _EditScreenState extends State<EditScreen> {
                                 height: 30,
                                 width: 70,
                                 decoration: BoxDecoration(
-                                  color: Colors.blue,
+                                  color: Color.fromRGBO(
+                                    230,
+                                    242,
+                                    255,
+                                    1,
+                                  ),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 alignment: Alignment.center,

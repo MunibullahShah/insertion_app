@@ -6,27 +6,35 @@ class InputContainer extends StatelessWidget {
     Key? key,
     required this.controller,
     required this.label,
+    required this.hintText,
     this.obscure,
   }) : super(key: key);
 
   final TextEditingController controller;
   final String label;
+  final String hintText;
   var obscure;
   @override
   Widget build(BuildContext context) {
     return Container(
       //height: 43,
-      width: 350,
+      width: 290,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label),
-          const SizedBox(
-            width: 10,
-          ),
           Container(
-            width: 200,
-            //height: 40,
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(
+                230,
+                242,
+                255,
+                1,
+              ),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            width: 160,
+            height: 35,
             child: TextFormField(
               obscureText: label == 'Password' ? true : false,
               maxLines: (label == 'Password' || label == 'Email') ? 1 : 3,
@@ -45,11 +53,13 @@ class InputContainer extends StatelessWidget {
               textAlignVertical: TextAlignVertical.center,
               style: TextStyle(fontSize: 14),
               decoration: InputDecoration(
-                contentPadding:
-                    EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+                hintText: hintText,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide.none,
                 ),
+                contentPadding:
+                    EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
               ),
             ),
           )
