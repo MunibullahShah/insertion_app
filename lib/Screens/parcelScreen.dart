@@ -15,7 +15,9 @@ class _ParcelsScreenState extends State<ParcelsScreen> {
       appBar: AppBar(
         title: Text("Parcels"),
       ),
-      body: Container(),
+      body: Container(
+        child: Center(),
+      ),
     ));
   }
 }
