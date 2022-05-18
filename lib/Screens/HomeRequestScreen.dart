@@ -453,8 +453,7 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
 
         String str = json.encode(formData);
         try {
-          var response = await Dio().post(
-              "https://idms.backend.eastdevs.com/api/parcels",
+          var response = await Dio().post("http://localhost:1337/api/parcels",
               data: <String, Map<String, dynamic>>{'data': formData});
           print(response.data);
           setState(() {

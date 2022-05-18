@@ -134,12 +134,11 @@ class _LoginScreenState extends State<LoginScreen> {
     String email = emailController.text;
     print("EMail: $email, Password: $password");
     try {
-      var response = await Dio().post(
-          "https://idms.backend.eastdevs.com/api/auth/local",
+      var response = await Dio().post("http://localhost:1337/api/auth/local",
           data: {"identifier": email, "password": password});
       if (response.statusCode == 200) {
         var resp = await Dio().get(
-            "http://idms.backend.eastdevs.com/api/employees?filters[email][\$eq]=$email");
+            "http://localhost:1337/api/employees?filters[email][\$eq]=$email");
         if (resp.statusCode == 200) {
           print(resp.data);
           Navigator.push(context,

@@ -1,25 +1,25 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:insertion_app/Screens/HomeRequestScreen.dart';
-import 'package:insertion_app/Screens/ProfileScreen.dart';
-import 'package:insertion_app/Screens/parcelsListScreen.dart';
-import 'package:insertion_app/apiClasses/OSM_API_CLASS_entity.dart';
-import 'package:insertion_app/apiClasses/parcel_info_api_entity.dart';
-
+import 'package:insertion_app/models/ParcelModel.dart';
 import '../Widgets/inputContainer.dart';
+import '../apiClasses/OSM_API_CLASS_entity.dart';
+import '../apiClasses/parcel_info_api_entity.dart';
 
-class ParcelInfoScreen extends StatefulWidget {
-  ParcelInfoScreen({Key? key}) : super(key: key);
+class ParcelEditScreen extends StatefulWidget {
+  ParcelModel parcel;
+
+  ParcelEditScreen(this.parcel);
 
   @override
-  State<ParcelInfoScreen> createState() => _ParcelInfoScreenState();
+  State<ParcelEditScreen> createState() => _ParcelEditScreenState();
 }
 
-class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
+class _ParcelEditScreenState extends State<ParcelEditScreen> {
   TextEditingController senderNameController = TextEditingController();
   TextEditingController receiverNameController = TextEditingController();
   TextEditingController senderAddressController = TextEditingController();
@@ -35,70 +35,44 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   var status;
+  var tempStatus;
   var type;
+  var tempType;
   var deliveryType;
+  var tempdeliveryType;
   double longitude = 0;
   double latitude = 0;
 
   bool isLoading = false;
   bool isFound = true;
   var parcelSize;
+  var tempSize;
+
+  @override
+  void initState() {
+    type = widget.parcel.parcelType;
+    deliveryType = widget.parcel.deliveryType;
+    status = widget.parcel.status;
+    parcelSize = "M";
+
+    senderNameController.text = widget.parcel.senderName;
+    receiverNameController.text = widget.parcel.receiverName;
+    senderAddressController.text = widget.parcel.senderAddress;
+    receiverAddressController.text = widget.parcel.address;
+    senderPhoneController.text = widget.parcel.senderContact;
+    receiverPhoneController.text = widget.parcel.receiverContact;
+    weightController.text = widget.parcel.parcelWeight.toString();
+    longitudeController.text = widget.parcel.longitude.toString();
+    latitudeController.text = widget.parcel.latitude.toString();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Parcel Data Insertion"),
-          actions: [
-            Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.only(right: 10),
-              child: RaisedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ProfileScreen(),
-                    ),
-                  );
-                  print("Hello");
-                },
-                child: Text("Profile"),
-              ),
-            ),
-            Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.only(right: 10),
-              child: RaisedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ParcelsListScreen(),
-                    ),
-                  );
-                  print("Parcels");
-                },
-                child: Text("Parcels"),
-              ),
-            ),
-            Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.only(right: 10),
-              child: RaisedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => HomeScreenRequestScreen()),
-                  );
-                  print("Hello");
-                },
-                child: Text("Logout"),
-              ),
-            ),
-          ],
+          title: const Text("Parcel Update"),
         ),
         body: isLoading
             ? const Center(
@@ -204,12 +178,12 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
                                 child: Text(items),
                               );
                             }).toList(),
-                            value: type,
+                            value: tempType,
                             hint: const Text("type"),
                             icon: const Icon(Icons.keyboard_arrow_down),
                             onChanged: (value) {
                               setState(() {
-                                type = value as String;
+                                tempType = value as String;
                               });
                             },
                           ),
@@ -230,12 +204,12 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
                                 child: Text(items),
                               );
                             }).toList(),
-                            value: parcelSize,
+                            value: tempSize,
                             hint: const Text("Size"),
                             icon: const Icon(Icons.keyboard_arrow_down),
                             onChanged: (value) {
                               setState(() {
-                                parcelSize = value as String;
+                                tempSize = value as String;
                               });
                             },
                           ),
@@ -284,12 +258,12 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
                                 child: Text(items),
                               );
                             }).toList(),
-                            value: deliveryType,
+                            value: tempdeliveryType,
                             hint: const Text("Select Delivery Type"),
                             icon: const Icon(Icons.keyboard_arrow_down),
                             onChanged: (value) {
                               setState(() {
-                                deliveryType = value as String;
+                                tempdeliveryType = value as String;
                               });
                             },
                           ),
@@ -312,12 +286,12 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
                                 child: Text(items),
                               );
                             }).toList(),
-                            value: status,
+                            value: tempStatus,
                             hint: const Text("status"),
                             icon: const Icon(Icons.keyboard_arrow_down),
                             onChanged: (value) {
                               setState(() {
-                                status = value as String;
+                                tempStatus = value as String;
                               });
                             },
                           ),
@@ -343,7 +317,7 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
                             setState(() {
                               isLoading = !isLoading;
                             });
-                            getLocation();
+                            sendData();
                           }
                         },
                         child: Text("Submit"),
@@ -356,94 +330,69 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
     );
   }
 
-  getLocation() async {
-    var response = await http.get(Uri.parse(
-        'https://nominatim.openstreetmap.org/search?q=\"+${receiverAddressController.text}+\"&format=geojson'));
-
-    if (response.statusCode == 200) {
-//      print('respone: ${response.body}');
-      _osmapiclassEntity =
-          OSMAPICLASSEntity.fromJson(jsonDecode(response.body));
-      if (_osmapiclassEntity.features.isEmpty && isFound) {
-        setState(() {
-          isFound = false;
-        });
-        return;
-      } else if (!isFound && latitudeController.text != null) {
-        sendData();
-      } else {
-        longitude = (_osmapiclassEntity.features.first.geometry.coordinates[0]);
-        latitude = _osmapiclassEntity.features.first.geometry.coordinates[1];
-        sendData();
-      }
-    } else {
-      print(response.statusCode);
-      Fluttertoast.showToast(msg: 'Error getting location');
-      setState(() {
-        isFound = false;
-      });
-    }
-  }
-
   sendData() async {
-    try {
-      //getLocation();
-      if (!isFound) {
-        apiEntity.data.longitude = double.parse(longitudeController.text);
-        apiEntity.data.latitude = double.parse(latitudeController.text);
-      }
-      if (longitude != null) {
-        Map<String, dynamic> formData = {
-          "senderName": senderNameController.text,
-          "longitude": latitude,
-          "latitude": longitude,
-          "address": receiverAddressController.text,
-          "senderContact": senderPhoneController.text,
-          "receiverContact": receiverPhoneController.text,
-          "addedBy": "addedBy",
-          "receiverName": receiverNameController.text,
-          "type": type.toString(),
-          "parcelSize": parcelSize.toString(),
-          "parcelWeight": weightController.text,
-          "status": status.toString(),
-          "deliveryType": deliveryType.toString(),
-          "employee": 1
-        };
+    // Map<String, dynamic> formData = {
+    //   "senderName": senderNameController.text,
+    //   "longitude": latitude,
+    //   "latitude": longitude,
+    //   "address": receiverAddressController.text,
+    //   "senderContact": senderPhoneController.text,
+    //   "receiverContact": receiverPhoneController.text,
+    //   "addedBy": "addedBy",
+    //   "receiverName": receiverNameController.text,
+    //   "type": tempType == null ? type.toString() : tempType.toString(),
+    //   "parcelSize":
+    //       tempSize == null ? parcelSize.toString() : tempSize.toString(),
+    //   "parcelWeight": weightController.text,
+    //   "status": tempStatus == null ? status.toString() : tempStatus.toString(),
+    //   "deliveryType": tempdeliveryType == null
+    //       ? deliveryType.toString()
+    //       : tempdeliveryType.toString(),
+    //   "employee": 1,
+    // };
 
-        String str = json.encode(formData);
-        try {
-          var response = await Dio().post(
-              "https://idms.backend.eastdevs.com/api/parcels",
-              data: <String, Map<String, dynamic>>{'data': formData});
-          print(response.data);
-          setState(() {
-            weightController.clear();
-            receiverNameController.clear();
-            senderNameController.clear();
-            receiverPhoneController.clear();
-            senderPhoneController.clear();
-            receiverAddressController.clear();
-            senderAddressController.clear();
-            isLoading = !isLoading;
-            _formKey.currentState!.reset();
-          });
-        } catch (e) {
-          setState(() {
-            isLoading = !isLoading;
-          });
-          print(e.toString());
-        }
-        return 1;
-      }
-      setState(() {
-        isLoading = !isLoading;
-      });
-    } catch (e) {
-      print("Exception: $e");
-
-      setState(() {
-        isLoading = false;
-      });
+    if (tempType != null) {
+      type = tempType.toString();
     }
+    if (tempStatus != null) {
+      status = tempStatus.toString();
+    }
+    if (tempdeliveryType != null) {
+      deliveryType = tempdeliveryType.toString();
+    }
+    // if (tempSize != null) {
+    //   parcelSize = tempSize.toString();
+    // }
+
+    print("Type: $type : $deliveryType ,$status,  $parcelSize");
+
+    // try {
+    var response = await Dio()
+        .put("http://localhost:1337/api/Parcels/${widget.parcel.id}", data: {
+      "data": {
+        "senderName": senderNameController.text,
+        "longitude": latitude,
+        "latitude": longitude,
+        "address": receiverAddressController.text,
+        "senderContact": senderPhoneController.text,
+        "receiverContact": receiverPhoneController.text,
+        "addedBy": "addedBy",
+        "receiverName": receiverNameController.text,
+        "type": type,
+        "parcelSize": parcelSize,
+        "parcelWeight": double.parse(weightController.text),
+        "status": status,
+        "deliveryType": deliveryType.toString(),
+        "employee": 1,
+      }
+    });
+    print(response.data);
+    // } catch (e) {
+    //   print("Exception: $e");
+
+    setState(() {
+      isLoading = false;
+    });
+    // }
   }
 }

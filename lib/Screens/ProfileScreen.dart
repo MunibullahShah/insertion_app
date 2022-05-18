@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:insertion_app/Screens/EditScreen.dart';
+import 'package:insertion_app/Screens/profileEditScreen.dart';
 import 'package:insertion_app/Screens/HomeRequestScreen.dart';
 import 'package:insertion_app/models/employee.dart';
 
