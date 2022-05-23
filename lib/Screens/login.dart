@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:insertion_app/Screens/parcelInfoScreen.dart';
 import 'package:insertion_app/Widgets/inputContainer.dart';
@@ -141,11 +142,14 @@ class _LoginScreenState extends State<LoginScreen> {
             "http://localhost:1337/api/employees?filters[email][\$eq]=$email");
         if (resp.statusCode == 200) {
           print(resp.data);
+          String id = resp.data["data"][0]["id"].toString();
+          print("ID: $id");
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => ParcelInfoScreen()));
+              MaterialPageRoute(builder: (context) => ParcelInfoScreen(id)));
         }
       }
     } catch (e) {
+      Fluttertoast.showToast(msg: "Login Failed");
       print(e);
     }
     setState(() {

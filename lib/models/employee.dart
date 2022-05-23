@@ -1,3 +1,3 @@
 class Employee {
-  String? name, email, address, phone, nic;
+  String? id, name, email, address, phone, nic;
 }

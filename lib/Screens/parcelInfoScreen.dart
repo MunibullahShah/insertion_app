@@ -13,7 +13,9 @@ import 'package:insertion_app/apiClasses/parcel_info_api_entity.dart';
 import '../Widgets/inputContainer.dart';
 
 class ParcelInfoScreen extends StatefulWidget {
-  ParcelInfoScreen({Key? key}) : super(key: key);
+  String employeeID;
+
+  ParcelInfoScreen(this.employeeID);
 
   @override
   State<ParcelInfoScreen> createState() => _ParcelInfoScreenState();
@@ -55,6 +57,7 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
               alignment: Alignment.center,
               padding: EdgeInsets.only(right: 10),
               child: RaisedButton(
+                color: Color.fromRGBO(0, 153, 51, 1),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -71,11 +74,13 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
               alignment: Alignment.center,
               padding: EdgeInsets.only(right: 10),
               child: RaisedButton(
+                color: Color.fromRGBO(0, 153, 51, 1),
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ParcelsListScreen(),
+                      builder: (context) =>
+                          ParcelsListScreen(widget.employeeID),
                     ),
                   );
                   print("Parcels");
@@ -87,6 +92,7 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
               alignment: Alignment.center,
               padding: EdgeInsets.only(right: 10),
               child: RaisedButton(
+                color: Color.fromRGBO(0, 153, 51, 1),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -407,32 +413,23 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
           "parcelWeight": weightController.text,
           "status": status.toString(),
           "deliveryType": deliveryType.toString(),
-          "employee": 1
+          "employee": widget.employeeID,
         };
-
-        String str = json.encode(formData);
         try {
-          var response = await Dio().post(
-              "https://idms.backend.eastdevs.com/api/parcels",
+          var response = await Dio().post("http://localhost:1337/api/parcels",
               data: <String, Map<String, dynamic>>{'data': formData});
           print(response.data);
           setState(() {
-            weightController.clear();
-            receiverNameController.clear();
-            senderNameController.clear();
-            receiverPhoneController.clear();
-            senderPhoneController.clear();
-            receiverAddressController.clear();
-            senderAddressController.clear();
             isLoading = !isLoading;
-            _formKey.currentState!.reset();
           });
         } catch (e) {
+          Fluttertoast.showToast(msg: "Failed");
           setState(() {
             isLoading = !isLoading;
           });
           print(e.toString());
         }
+        Fluttertoast.showToast(msg: "Successfull");
         return 1;
       }
       setState(() {
@@ -440,6 +437,7 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
       });
     } catch (e) {
       print("Exception: $e");
+      Fluttertoast.showToast(msg: "Failed");
 
       setState(() {
         isLoading = false;

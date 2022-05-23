@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:insertion_app/models/ParcelModel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../Widgets/inputContainer.dart';
 import '../apiClasses/OSM_API_CLASS_entity.dart';
 import '../apiClasses/parcel_info_api_entity.dart';
@@ -351,6 +352,7 @@ class _ParcelEditScreenState extends State<ParcelEditScreen> {
     //   "employee": 1,
     // };
 
+    print("${widget.parcel.id}");
     if (tempType != null) {
       type = tempType.toString();
     }
@@ -364,35 +366,37 @@ class _ParcelEditScreenState extends State<ParcelEditScreen> {
     //   parcelSize = tempSize.toString();
     // }
 
-    print("Type: $type : $deliveryType ,$status,  $parcelSize");
+    //print("Type: $type : $deliveryType ,$status,  $parcelSize");
 
-    // try {
-    var response = await Dio()
-        .put("http://localhost:1337/api/Parcels/${widget.parcel.id}", data: {
-      "data": {
-        "senderName": senderNameController.text,
-        "longitude": latitude,
-        "latitude": longitude,
-        "address": receiverAddressController.text,
-        "senderContact": senderPhoneController.text,
-        "receiverContact": receiverPhoneController.text,
-        "addedBy": "addedBy",
-        "receiverName": receiverNameController.text,
-        "type": type,
-        "parcelSize": parcelSize,
-        "parcelWeight": double.parse(weightController.text),
-        "status": status,
-        "deliveryType": deliveryType.toString(),
-        "employee": 1,
-      }
-    });
-    print(response.data);
-    // } catch (e) {
-    //   print("Exception: $e");
+    try {
+      var response = await Dio()
+          .put("http://localhost:1337/api/Parcels/${widget.parcel.id}", data: {
+        "data": {
+          "senderName": senderNameController.text,
+          "longitude": latitude,
+          "latitude": longitude,
+          "address": receiverAddressController.text,
+          "senderContact": senderPhoneController.text,
+          "receiverContact": receiverPhoneController.text,
+          "addedBy": "addedBy",
+          "receiverName": receiverNameController.text,
+          "type": type,
+          "parcelSize": parcelSize,
+          "parcelWeight": double.parse(weightController.text),
+          "status": status,
+          "deliveryType": deliveryType.toString(),
+          "employee": 1,
+        }
+      });
+      print(response.data);
+      Fluttertoast.showToast(msg: "Parcel Updated");
+    } catch (e) {
+      print("Exception: $e");
+      Fluttertoast.showToast(msg: "Parcel Update Failed");
 
-    setState(() {
-      isLoading = false;
-    });
-    // }
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 }

@@ -180,7 +180,7 @@ class _EditScreenState extends State<EditScreen> {
   updateData() async {
     try {
       var response = await Dio()
-          .put("https://idms.backend.eastdevs.com/api/Employees/1", data: {
+          .put("http://localhost:1337/api/Employees/${widget.user.id}", data: {
         "data": {
           "name": nameController.text,
           "nic_no": nicController.text,

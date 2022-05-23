@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:insertion_app/Screens/ProfileScreen.dart';
 import 'package:insertion_app/Screens/login.dart';
 import '../Widgets/inputContainer.dart';
 import '../apiClasses/OSM_API_CLASS_entity.dart';
@@ -71,7 +72,9 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  MaterialPageRoute(
+                    builder: (context) => ProfileScreen(),
+                  ),
                 );
               },
               child: Text("Login"),
@@ -465,6 +468,7 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
           });
           print(e.toString());
         }
+        Fluttertoast.showToast(msg: "Successfull");
         return 1;
       }
       setState(() {

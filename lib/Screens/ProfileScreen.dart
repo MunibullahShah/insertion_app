@@ -1,11 +1,14 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:insertion_app/Screens/profileEditScreen.dart';
 import 'package:insertion_app/Screens/HomeRequestScreen.dart';
 import 'package:insertion_app/models/employee.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  String employeeID = "6";
+
+  // ProfileScreen({this.employeeID});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -15,6 +18,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool isLoading = false;
   @override
   void initState() {
+    user.id = widget.employeeID;
     setState(() {
       isLoading = true;
     });
@@ -27,52 +31,59 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : Scaffold(
-              appBar: AppBar(
-                title: Text("Profile"),
-                actions: [
-                  Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.only(right: 10),
-                    child: RaisedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditScreen(user),
-                          ),
-                        );
-                        print("Hello");
-                      },
-                      child: Text("Edit Profile"),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Profile"),
+          actions: [
+            Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.only(right: 10),
+              child: RaisedButton(
+                color: Color.fromRGBO(0, 153, 51, 1),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditScreen(user),
                     ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.only(right: 10),
-                    child: RaisedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => HomeScreenRequestScreen()),
-                        );
-                        print("Hello");
-                      },
-                      child: Text("Logout"),
-                    ),
-                  ),
-                ],
+                  );
+                  print("Hello");
+                },
+                child: Text("Edit Profile"),
               ),
-              body: Center(
+            ),
+            Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.only(right: 10),
+              child: RaisedButton(
+                color: Color.fromRGBO(0, 153, 51, 1),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomeScreenRequestScreen()),
+                  );
+                  print("Hello");
+                },
+                child: Text("Logout"),
+              ),
+            ),
+          ],
+        ),
+        body: isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : Center(
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Color.fromRGBO(131, 191, 234, 1),
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey,
+                        offset: Offset(5.0, 5.0),
+                      )
+                    ],
                   ),
                   height: MediaQuery.of(context).size.height * (0.70),
                   width: MediaQuery.of(context).size.width * (0.75),
@@ -81,8 +92,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Container(
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Color.fromRGBO(131, 160, 234, 1),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            bottomLeft: Radius.circular(8),
+                          ),
+                          color: Color.fromRGBO(255, 214, 77, 1),
                         ),
                         // height: MediaQuery.of(context).size.height * (0.70),
                         width: (MediaQuery.of(context).size.width * (0.75)) *
@@ -91,9 +105,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Container(
-                              padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
+                              // padding: EdgeInsets.fromLTRB(0, 15, 0, 15),
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
+                                borderRadius: BorderRadius.circular(40),
                               ),
                               height:
                                   (MediaQuery.of(context).size.width * (0.75)) *
@@ -103,9 +117,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   (MediaQuery.of(context).size.width * (0.75)) *
                                       (0.30) *
                                       (0.80),
-                              child: Image(
-                                image: NetworkImage(
-                                    "https://th.bing.com/th/id/R.cd6d11ef068a3f0d483a61b73044e4ea?rik=6L9rWMoFYxvwNg&pid=ImgRaw&r=0"),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(200),
+                                child: Image(
+                                  image: NetworkImage(
+                                      "https://th.bing.com/th/id/R.cd6d11ef068a3f0d483a61b73044e4ea?rik=6L9rWMoFYxvwNg&pid=ImgRaw&r=0"),
+                                ),
                               ),
                             ),
                             Container(
@@ -114,7 +131,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 user.name!,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 18,
+                                  fontSize: 25,
                                 ),
                               ),
                               alignment: Alignment.center,
@@ -124,8 +141,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Color.fromRGBO(131, 191, 234, 1),
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(8),
+                            bottomRight: Radius.circular(8),
+                          ),
+                          color: Colors.white,
                         ),
                         height: MediaQuery.of(context).size.height * (0.70),
                         width: (MediaQuery.of(context).size.width * (0.75)) *
@@ -221,14 +241,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
-            ),
+      ),
     );
   }
 
   getEmployeeData() async {
     try {
-      var response =
-          await Dio().get("https://idms.backend.eastdevs.com/api/employees/1");
+      var response = await Dio()
+          .get("http://localhost:1337/api/employees/${widget.employeeID}");
       print(response.data['data']['attributes']);
       user.name = response.data['data']['attributes']["name"];
       user.email = response.data['data']['attributes']["email"];

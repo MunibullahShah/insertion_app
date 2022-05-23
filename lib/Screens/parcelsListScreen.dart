@@ -2,9 +2,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:insertion_app/Screens/ParcelEditScreen.dart';
 import 'package:insertion_app/models/ParcelModel.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ParcelsListScreen extends StatefulWidget {
-  const ParcelsListScreen({Key? key}) : super(key: key);
+  String employeeID;
+
+  ParcelsListScreen(this.employeeID);
 
   @override
   State<ParcelsListScreen> createState() => _ParcelsListScreenState();
@@ -126,9 +129,9 @@ class _ParcelsListScreenState extends State<ParcelsListScreen> {
 
   getParcels() async {
     try {
-      var resp = await Dio()
+      await Dio()
           .get(
-              "http://idms.backend.eastdevs.com/api/Parcels?filters[employee][id][\$eq]=5")
+              "http://localhost:1337/api/Parcels?filters[employee][id][\$eq]=${widget.employeeID}")
           .then((value) {
         print(value.data);
         value.data["data"].forEach((e) {
