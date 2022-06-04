@@ -34,7 +34,8 @@ class InputContainer extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
             ),
             width: 160,
-            height: 35,
+            height: 50,
+            alignment: Alignment.center,
             child: TextFormField(
               obscureText: label == 'Password' ? true : false,
               maxLines: (label == 'Password' || label == 'Email') ? 1 : 3,
