@@ -7,6 +7,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:insertion_app/Screens/ProfileScreen.dart';
 import 'package:insertion_app/Screens/login.dart';
+import 'package:insertion_app/Widgets/informationContainer.dart';
 import 'package:insertion_app/services/api_services.dart';
 import '../Widgets/inputContainer.dart';
 import '../apiClasses/OSM_API_CLASS_entity.dart';
@@ -80,14 +81,23 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
             child: RaisedButton(
               color: Color.fromRGBO(0, 153, 51, 1),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginScreen(),
-                  ),
-                );
+                if (isParcelTracked) {
+                  setState(() {
+                    trackingNoController.text = '';
+                    isParcelTracking = false;
+                    isParcelTracked = false;
+                    isLoading = false;
+                  });
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginScreen(),
+                    ),
+                  );
+                }
               },
-              child: Text("Login"),
+              child: Text(isParcelTracked ? "Home" : "Login"),
             ),
           ),
         ],
@@ -144,10 +154,56 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
                                   )
                                 : isParcelTracked
                                     ? Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
                                         children: [
-                                          Text(
-                                            parcel.id.toString(),
+                                          Container(
+                                            child: const Text(
+                                              "Parcel Information",
+                                              style: TextStyle(fontSize: 27),
+                                            ),
                                           ),
+                                          Container(
+                                            height: 250,
+                                            padding: const EdgeInsets.fromLTRB(
+                                                8, 30, 10, 0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              children: [
+                                                //Column for Sender
+                                                Column(
+                                                  children: [
+                                                    InformationContainer(
+                                                        label: "Sender Name",
+                                                        text:
+                                                            parcel.senderName),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    InformationContainer(
+                                                        label: "Address",
+                                                        text: parcel.address),
+                                                  ],
+                                                ),
+                                                //Column of reciever
+                                                Column(
+                                                  children: [
+                                                    InformationContainer(
+                                                        label: "Receiver Name",
+                                                        text: parcel
+                                                            .receiverName),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    InformationContainer(
+                                                        label: "Status",
+                                                        text: parcel.status),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          )
                                         ],
                                       )
                                     : Column(
@@ -444,6 +500,9 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
                                                                 .text);
                                                     if (parcel.id != null) {
                                                       setState(() {
+                                                        isLoading = false;
+                                                        isParcelTracking =
+                                                            false;
                                                         isParcelTracked = true;
                                                       });
                                                     }
