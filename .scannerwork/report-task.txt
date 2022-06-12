@@ -1,0 +1,6 @@
+projectKey=insertion
+serverUrl=http://localhost:9000
+serverVersion=9.4.0.54424
+dashboardUrl=http://localhost:9000/dashboard?id=insertion
+ceTaskId=AYE1CyuKmcmJSDMWPsAP
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYE1CyuKmcmJSDMWPsAP
