@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:insertion_app/Screens/HomeRequestScreen.dart';
+import 'package:insertion_app/constants.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,9 +16,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-          primaryColor: Color.fromRGBO(255, 214, 77, 1),
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          primaryColor: mainColor,
           primarySwatch: generateMaterialColorFromColor(
-            Color.fromRGBO(255, 214, 77, 1),
+           mainColor,
           )),
       home: HomeScreenRequestScreen(),
     );

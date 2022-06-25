@@ -5,13 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:insertion_app/Screens/ProfileScreen.dart';
 import 'package:insertion_app/Screens/login.dart';
+import 'package:insertion_app/Widgets/appButton.dart';
 import 'package:insertion_app/Widgets/informationContainer.dart';
 import 'package:insertion_app/services/api_services.dart';
 import '../Widgets/inputContainer.dart';
 import '../apiClasses/OSM_API_CLASS_entity.dart';
 import '../apiClasses/parcel_info_api_entity.dart';
+import '../constants.dart';
 
 class HomeScreenRequestScreen extends StatefulWidget {
   const HomeScreenRequestScreen({Key? key}) : super(key: key);
@@ -66,7 +67,7 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(
+      backgroundColor: const Color.fromRGBO(
         230,
         242,
         255,
@@ -77,10 +78,10 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
         actions: [
           Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.only(right: 10),
-            child: RaisedButton(
-              color: Color.fromRGBO(0, 153, 51, 1),
-              onPressed: () {
+            padding: const EdgeInsets.only(right: 10),
+            child: appButton(
+              isParcelTracked ? "Home" : "Login",
+              () {
                 if (isParcelTracked) {
                   setState(() {
                     trackingNoController.text = '';
@@ -92,12 +93,11 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => LoginScreen(),
+                      builder: (context) => const LoginScreen(),
                     ),
                   );
                 }
               },
-              child: Text(isParcelTracked ? "Home" : "Login"),
             ),
           ),
         ],
@@ -112,9 +112,9 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
                   height: MediaQuery.of(context).size.height * 0.75,
                   width: MediaQuery.of(context).size.width * 0.90,
                   decoration: BoxDecoration(
-                    color: Color.fromRGBO(255, 214, 77, 1),
+                    color: const Color.fromRGBO(255, 214, 77, 1),
                     borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Colors.grey,
                         offset: Offset(5.0, 5.0),
@@ -124,15 +124,17 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
                   child: Row(
                     children: [
                       Expanded(
+                        flex: 1,
                         child: Center(
                           child: Container(
-                            child: Image(
+                            child: const Image(
                               image: AssetImage("aaaa.png"),
                             ),
                           ),
                         ),
                       ),
                       Expanded(
+                        flex: 2,
                         child: Center(
                           child: Container(
                             padding: const EdgeInsets.fromLTRB(
@@ -149,7 +151,7 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
                               ),
                             ),
                             child: isParcelTracking
-                                ? Center(
+                                ? const Center(
                                     child: CircularProgressIndicator(),
                                   )
                                 : isParcelTracked
@@ -178,7 +180,7 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
                                                         label: "Sender Name",
                                                         text:
                                                             parcel.senderName),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       height: 10,
                                                     ),
                                                     InformationContainer(
@@ -193,7 +195,7 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
                                                         label: "Receiver Name",
                                                         text: parcel
                                                             .receiverName),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       height: 10,
                                                     ),
                                                     InformationContainer(
@@ -211,7 +213,7 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
                                             MainAxisAlignment.start,
                                         children: [
                                           Container(
-                                            child: Text(
+                                            child: const Text(
                                               "Parcel Info for Pickup",
                                               style: TextStyle(fontSize: 27),
                                             ),
@@ -256,7 +258,7 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
                                                       ),
                                                     ],
                                                   ),
-                                                  SizedBox(
+                                                  const SizedBox(
                                                     width: 5,
                                                   ),
                                                   Column(
@@ -297,19 +299,19 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
 
                                           ///Validation till here
                                           Container(
-                                            padding: EdgeInsets.all(10),
+                                            padding: const EdgeInsets.all(10),
                                             child: Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                                  MainAxisAlignment.spaceAround,
                                               children: [
                                                 Container(
                                                   alignment: Alignment.center,
                                                   width: 120,
-                                                  padding: EdgeInsets.fromLTRB(
-                                                      5, 0, 0, 10),
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          5, 0, 0, 10),
                                                   decoration: BoxDecoration(
-                                                    color: Color.fromRGBO(
+                                                    color: const Color.fromRGBO(
                                                       230,
                                                       242,
                                                       255,
@@ -345,14 +347,15 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
                                                     },
                                                   ),
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 25,
                                                 ),
                                                 Container(
-                                                  padding: EdgeInsets.fromLTRB(
-                                                      5, 0, 0, 10),
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          5, 0, 0, 10),
                                                   decoration: BoxDecoration(
-                                                    color: Color.fromRGBO(
+                                                    color: const Color.fromRGBO(
                                                       230,
                                                       242,
                                                       255,
@@ -394,66 +397,13 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
                                                     },
                                                   ),
                                                 ),
-                                                SizedBox(
-                                                  width: 30,
-                                                ),
-                                                Container(
-                                                  padding: EdgeInsets.fromLTRB(
-                                                      5, 0, 0, 10),
-                                                  decoration: BoxDecoration(
-                                                    color: Color.fromRGBO(
-                                                      230,
-                                                      242,
-                                                      255,
-                                                      1,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8),
-                                                  ),
-                                                  height: 30,
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      const Text(
-                                                          "Parcel weight: "),
-                                                      const SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      Container(
-                                                        width: 50,
-                                                        child: TextField(
-                                                          controller:
-                                                              weightController,
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          textAlignVertical:
-                                                              TextAlignVertical
-                                                                  .center,
-                                                          decoration:
-                                                              InputDecoration(
-                                                            border:
-                                                                OutlineInputBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ),
                                               ],
                                             ),
                                           ),
                                           const SizedBox(
                                             height: 20,
                                           ),
-                                          buttonWidget("Submit", () {
+                                          appButton("Submit", () {
                                             if (_parcelFormKey.currentState!
                                                 .validate()) {
                                               setState(() {
@@ -485,27 +435,16 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
                                                   hintText: "123",
                                                   obscure: false,
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 25,
                                                 ),
-                                                buttonWidget("Track", () async {
+                                                appButton("Track", () async {
                                                   if (_trackingKey.currentState!
                                                       .validate()) {
                                                     setState(() {
                                                       isParcelTracking = true;
                                                     });
-                                                    parcel = await _apiServices
-                                                        .trackParcel(
-                                                            trackingNoController
-                                                                .text);
-                                                    if (parcel.id != null) {
-                                                      setState(() {
-                                                        isLoading = false;
-                                                        isParcelTracking =
-                                                            false;
-                                                        isParcelTracked = true;
-                                                      });
-                                                    }
+                                                    trackParcel();
                                                   }
                                                 }),
                                               ],
@@ -521,22 +460,6 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
                 ),
               ),
       ),
-    );
-  }
-
-  GestureDetector buttonWidget(String label, var onTap) {
-    return GestureDetector(
-      child: Container(
-        height: 30,
-        width: 70,
-        decoration: BoxDecoration(
-          color: Color.fromRGBO(0, 153, 51, 1),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        alignment: Alignment.center,
-        child: Text(label),
-      ),
-      onTap: onTap,
     );
   }
 
@@ -564,6 +487,7 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
       Fluttertoast.showToast(msg: 'Error getting location');
       setState(() {
         isFound = false;
+        isLoading = false;
       });
     }
   }
@@ -594,9 +518,12 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
 
         String str = json.encode(formData);
         try {
-          var response = await Dio().post("http://localhost:1337/api/parcels",
+          var response = await Dio().post(
+              "https://idms.backend.eastdevs.com/api/parcels",
               data: <String, Map<String, dynamic>>{'data': formData});
           print(response.data);
+          Fluttertoast.showToast(
+              msg: "Successfull, Tracking No: ${response.data['data']['id']}");
           setState(() {
             isLoading = !isLoading;
           });
@@ -605,8 +532,21 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
             isLoading = !isLoading;
           });
           print(e.toString());
+          Fluttertoast.showToast(msg: "Failed");
+          return 1;
         }
-        Fluttertoast.showToast(msg: "Successfull");
+        {
+          senderNameController.clear();
+          receiverNameController.clear();
+          senderAddressController.clear();
+          receiverAddressController.clear();
+          senderPhoneController.clear();
+          receiverPhoneController.clear();
+          receiverPhoneController.clear();
+          longitudeController.clear();
+          latitudeController.clear();
+          trackingNoController.clear();
+        }
         return 1;
       }
       setState(() {
@@ -619,5 +559,23 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
         isLoading = false;
       });
     }
+  }
+
+  void trackParcel() async {
+    try {
+      parcel = await _apiServices.trackParcel(trackingNoController.text);
+    } catch (e) {
+      setState(() {
+        isParcelTracking = false;
+      });
+    }
+    if (parcel.id != null) {
+      setState(() {
+        isLoading = false;
+        isParcelTracking = false;
+        isParcelTracked = true;
+      });
+    }
+    print("Here it comes");
   }
 }

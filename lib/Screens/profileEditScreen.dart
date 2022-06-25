@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:insertion_app/Screens/ProfileScreen.dart';
 import 'package:insertion_app/Widgets/inputContainer.dart';
+import 'package:insertion_app/constants.dart';
 import 'package:insertion_app/models/employee.dart';
 
 class EditScreen extends StatefulWidget {
@@ -41,7 +42,7 @@ class _EditScreenState extends State<EditScreen> {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: Color.fromRGBO(131, 191, 234, 1),
+              color: mainColor,
             ),
             height: MediaQuery.of(context).size.height * (0.70),
             width: MediaQuery.of(context).size.width * (0.75),
@@ -55,9 +56,8 @@ class _EditScreenState extends State<EditScreen> {
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          color: Color.fromRGBO(131, 160, 234, 1),
+                          color: Color.fromRGBO(23, 19, 19, 1),
                         ),
-                        // height: MediaQuery.of(context).size.height * (0.70),
                         width: (MediaQuery.of(context).size.width * (0.75)) *
                             (0.30),
                         child: Form(
@@ -86,9 +86,10 @@ class _EditScreenState extends State<EditScreen> {
                               Container(
                                 padding: EdgeInsets.all(8),
                                 child: Text(
-                                  "Muhammad Abdullah Akmal Dar",
+                                  "${widget.user.name}",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
+                                    color: Colors.white,
                                     fontSize: 18,
                                   ),
                                 ),
@@ -101,7 +102,7 @@ class _EditScreenState extends State<EditScreen> {
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          color: Color.fromRGBO(131, 191, 234, 1),
+                          color: mainColor,
                         ),
                         height: MediaQuery.of(context).size.height * (0.70),
                         width: (MediaQuery.of(context).size.width * (0.75)) *

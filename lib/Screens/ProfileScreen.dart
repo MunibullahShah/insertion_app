@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:insertion_app/Screens/profileEditScreen.dart';
 import 'package:insertion_app/Screens/HomeRequestScreen.dart';
+import 'package:insertion_app/Widgets/appButton.dart';
 import 'package:insertion_app/models/employee.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -38,9 +39,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Container(
               alignment: Alignment.center,
               padding: EdgeInsets.only(right: 10),
-              child: RaisedButton(
-                color: Color.fromRGBO(0, 153, 51, 1),
-                onPressed: () {
+              // child: RaisedButton(
+              //   color: Color.fromRGBO(0, 153, 51, 1),
+              //   onPressed: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (context) => EditScreen(user),
+              //       ),
+              //     );
+              //     print("Hello");
+              //   },
+              //   child: Text("Edit Profile"),
+              // ),
+              child: appButton(
+                "Edit Profile",
+                () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -49,23 +63,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   );
                   print("Hello");
                 },
-                child: Text("Edit Profile"),
               ),
             ),
             Container(
               alignment: Alignment.center,
               padding: EdgeInsets.only(right: 10),
-              child: RaisedButton(
-                color: Color.fromRGBO(0, 153, 51, 1),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => HomeScreenRequestScreen()),
-                  );
+              child: appButton(
+                "Logout",
+                () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute<void>(
+                          builder: (BuildContext context) =>
+                              const HomeScreenRequestScreen()),
+                      (route) => false);
+
                   print("Hello");
                 },
-                child: Text("Logout"),
               ),
             ),
           ],
@@ -247,8 +261,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   getEmployeeData() async {
     try {
-      var response = await Dio()
-          .get("http://localhost:1337/api/employees/${widget.employeeID}");
+      var response = await Dio().get(
+          "https://idms.backend.eastdevs.com/api/employees/${widget.employeeID}");
       print(response.data['data']['attributes']);
       user.name = response.data['data']['attributes']["name"];
       user.email = response.data['data']['attributes']["email"];

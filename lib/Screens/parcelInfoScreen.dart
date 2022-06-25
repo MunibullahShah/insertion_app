@@ -7,8 +7,10 @@ import 'package:http/http.dart' as http;
 import 'package:insertion_app/Screens/HomeRequestScreen.dart';
 import 'package:insertion_app/Screens/ProfileScreen.dart';
 import 'package:insertion_app/Screens/parcelsListScreen.dart';
+import 'package:insertion_app/Widgets/appButton.dart';
 import 'package:insertion_app/apiClasses/OSM_API_CLASS_entity.dart';
 import 'package:insertion_app/apiClasses/parcel_info_api_entity.dart';
+import 'package:insertion_app/constants.dart';
 
 import '../Widgets/inputContainer.dart';
 
@@ -36,9 +38,9 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  var status;
+  var status = "Scheduling";
   var type;
-  var deliveryType;
+  var deliveryType = "Delivery";
   double longitude = 0;
   double latitude = 0;
 
@@ -56,26 +58,24 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
             Container(
               alignment: Alignment.center,
               padding: EdgeInsets.only(right: 10),
-              child: RaisedButton(
-                color: Color.fromRGBO(0, 153, 51, 1),
-                onPressed: () {
+              child: appButton(
+                "Profile",
+                () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => ProfileScreen(),
                     ),
                   );
-                  print("Hello");
                 },
-                child: Text("Profile"),
               ),
             ),
             Container(
               alignment: Alignment.center,
               padding: EdgeInsets.only(right: 10),
-              child: RaisedButton(
-                color: Color.fromRGBO(0, 153, 51, 1),
-                onPressed: () {
+              child: appButton(
+                "Parcels",
+                () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -85,23 +85,22 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
                   );
                   print("Parcels");
                 },
-                child: Text("Parcels"),
               ),
             ),
             Container(
               alignment: Alignment.center,
               padding: EdgeInsets.only(right: 10),
-              child: RaisedButton(
-                color: Color.fromRGBO(0, 153, 51, 1),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => HomeScreenRequestScreen()),
-                  );
+              child: appButton(
+                "Logout",
+                () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute<void>(
+                          builder: (BuildContext context) =>
+                              const HomeScreenRequestScreen()),
+                      (route) => false);
                   print("Hello");
                 },
-                child: Text("Logout"),
               ),
             ),
           ],
@@ -110,252 +109,288 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
             ? const Center(
                 child: CircularProgressIndicator(),
               )
-            : Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                      height: 320,
-                      padding: const EdgeInsets.all(30),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(
-                            children: [
-                              InputContainer(
-                                label: "Sender Name",
-                                controller: senderNameController,
-                                hintText: "John Doe",
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              InputContainer(
-                                label: "Sender Phone No.",
-                                controller: senderPhoneController,
-                                hintText: "12345",
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              InputContainer(
-                                label: "Sender Address",
-                                controller: senderAddressController,
-                                hintText: "Address",
-                              ),
-                            ],
+            : Center(
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.75,
+                  width: MediaQuery.of(context).size.width * 0.90,
+                  decoration: BoxDecoration(
+                    color: const Color.fromRGBO(255, 214, 77, 1),
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Colors.grey,
+                        offset: Offset(5.0, 5.0),
+                      )
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Center(
+                          child: Container(
+                            child: Text(
+                              "Welcome Again\nYou have been Missed",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Satisfy',
+                                  fontSize: 40),
+                            ),
                           ),
-                          const VerticalDivider(
-                            thickness: 1,
-                            color: Colors.black,
-                          ),
-                          Column(
-                            children: [
-                              InputContainer(
-                                  label: "Receiver Name",
-                                  controller: receiverNameController,
-                                  hintText: "John Dree"),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              InputContainer(
-                                label: "Receiver Phone No.",
-                                controller: receiverPhoneController,
-                                hintText: "1235543",
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              InputContainer(
-                                label: "Receiver Address",
-                                controller: receiverAddressController,
-                                hintText: "Address",
-                              ),
-                              isFound
-                                  ? const SizedBox(
-                                      height: 1,
-                                    )
-                                  : Column(
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Center(
+                          child: Container(
+                            height: MediaQuery.of(context).size.height * 0.75,
+                            width: MediaQuery.of(context).size.width * 0.90,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              // color: Color.fromRGBO(255, 214, 77, 1),
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey,
+                                  offset: Offset(5.0, 5.0),
+                                )
+                              ],
+                            ),
+                            child: Form(
+                              key: _formKey,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Container(
+                                    height: 320,
+                                    padding: const EdgeInsets.all(30),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
                                       children: [
-                                        InputContainer(
-                                          controller: longitudeController,
-                                          label: 'Longitude',
-                                          hintText: 'longitude',
+                                        Column(
+                                          children: [
+                                            InputContainer(
+                                              label: "Sender Name",
+                                              controller: senderNameController,
+                                              hintText: "John Doe",
+                                            ),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            InputContainer(
+                                              label: "Sender Phone No.",
+                                              controller: senderPhoneController,
+                                              hintText: "12345",
+                                            ),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            InputContainer(
+                                              label: "Sender Address",
+                                              controller:
+                                                  senderAddressController,
+                                              hintText: "Address",
+                                            ),
+                                          ],
                                         ),
-                                        InputContainer(
-                                          controller: latitudeController,
-                                          label: "latitude",
-                                          hintText: "latitude",
+                                        const VerticalDivider(
+                                          thickness: 1,
+                                          color: Colors.black,
+                                        ),
+                                        Column(
+                                          children: [
+                                            InputContainer(
+                                                label: "Receiver Name",
+                                                controller:
+                                                    receiverNameController,
+                                                hintText: "John Dree"),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            InputContainer(
+                                              label: "Receiver Phone No.",
+                                              controller:
+                                                  receiverPhoneController,
+                                              hintText: "1235543",
+                                            ),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            InputContainer(
+                                              label: "Receiver Address",
+                                              controller:
+                                                  receiverAddressController,
+                                              hintText: "Address",
+                                            ),
+                                            isFound
+                                                ? const SizedBox(
+                                                    height: 1,
+                                                  )
+                                                : Column(
+                                                    children: [
+                                                      InputContainer(
+                                                        controller:
+                                                            longitudeController,
+                                                        label: 'Longitude',
+                                                        hintText: 'longitude',
+                                                      ),
+                                                      InputContainer(
+                                                        controller:
+                                                            latitudeController,
+                                                        label: "latitude",
+                                                        hintText: "latitude",
+                                                      ),
+                                                    ],
+                                                  ),
+                                          ],
                                         ),
                                       ],
                                     ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Container(
-                          height: 30,
-                          child: DropdownButton(
-                            items: <String>[
-                              'Letter',
-                              'Parcel',
-                            ].map((String items) {
-                              return DropdownMenuItem(
-                                value: items,
-                                child: Text(items),
-                              );
-                            }).toList(),
-                            value: type,
-                            hint: const Text("type"),
-                            icon: const Icon(Icons.keyboard_arrow_down),
-                            onChanged: (value) {
-                              setState(() {
-                                type = value as String;
-                              });
-                            },
-                          ),
-                        ),
-                        Container(
-                          height: 30,
-                          child: DropdownButton(
-                            items: <String>[
-                              'XS',
-                              'S',
-                              'M',
-                              'L',
-                              'XL',
-                              'XXL',
-                            ].map((String items) {
-                              return DropdownMenuItem(
-                                value: items,
-                                child: Text(items),
-                              );
-                            }).toList(),
-                            value: parcelSize,
-                            hint: const Text("Size"),
-                            icon: const Icon(Icons.keyboard_arrow_down),
-                            onChanged: (value) {
-                              setState(() {
-                                parcelSize = value as String;
-                              });
-                            },
-                          ),
-                        ),
-                        Container(
-                          height: 30,
-                          width: 200,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text("Parcel weight: "),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Container(
-                                width: 50,
-                                child: TextField(
-                                  controller: weightController,
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.all(10),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Container(
+                                          alignment: Alignment.center,
+                                          width: 120,
+                                          padding: const EdgeInsets.fromLTRB(
+                                              5, 0, 0, 10),
+                                          decoration: BoxDecoration(
+                                            color: const Color.fromRGBO(
+                                              230,
+                                              242,
+                                              255,
+                                              1,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          height: 30,
+                                          child: DropdownButton(
+                                            alignment: Alignment.center,
+                                            underline:
+                                                DropdownButtonHideUnderline(
+                                                    child: Container()),
+                                            items: <String>[
+                                              'Letter',
+                                              'Parcel',
+                                            ].map((String items) {
+                                              return DropdownMenuItem(
+                                                value: items,
+                                                child: Text(items),
+                                              );
+                                            }).toList(),
+                                            value: type,
+                                            hint: const Text("Type"),
+                                            icon: const Icon(
+                                                Icons.keyboard_arrow_down),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                type = value as String;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 25,
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              5, 0, 0, 10),
+                                          decoration: BoxDecoration(
+                                            color: const Color.fromRGBO(
+                                              230,
+                                              242,
+                                              255,
+                                              1,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          height: 30,
+                                          child: DropdownButton(
+                                            alignment: Alignment.center,
+                                            underline:
+                                                DropdownButtonHideUnderline(
+                                              child: Container(),
+                                            ),
+                                            items: <String>[
+                                              'XS',
+                                              'S',
+                                              'M',
+                                              'L',
+                                              'XL',
+                                              'XXL',
+                                            ].map((String items) {
+                                              return DropdownMenuItem(
+                                                value: items,
+                                                child: Text(items),
+                                              );
+                                            }).toList(),
+                                            value: parcelSize,
+                                            hint: const Text("Size"),
+                                            icon: const Icon(
+                                                Icons.keyboard_arrow_down),
+                                            onChanged: (value) {
+                                              setState(() {
+                                                parcelSize = value as String;
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ),
-                              )
-                            ],
+                                  // Container(
+                                  //   decoration: BoxDecoration(
+                                  //     color: Color.fromRGBO(
+                                  //       230,
+                                  //       242,
+                                  //       255,
+                                  //       1,
+                                  //     ),
+                                  //     borderRadius: BorderRadius.circular(8),
+                                  //   ),
+                                  //   alignment: Alignment.center,
+                                  //   height: 30,
+                                  //   width: 70,
+                                  //   child: GestureDetector(
+                                  //     onTap: () {
+                                  //       if (_formKey.currentState!.validate()) {
+                                  //         setState(() {
+                                  //           isLoading = !isLoading;
+                                  //         });
+                                  //         getLocation();
+                                  //       }
+                                  //     },
+                                  //     child: Text("Submit"),
+                                  //   ),
+                                  // ),
+                                  appButton(
+                                    "Submit",
+                                    () {
+                                      if (_formKey.currentState!.validate()) {
+                                        setState(() {
+                                          isLoading = !isLoading;
+                                        });
+                                        getLocation();
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Container(
-                          height: 30,
-                          child: DropdownButton(
-                            items: <String>[
-                              'Delivery',
-                              'Pickup',
-                            ].map((String items) {
-                              return DropdownMenuItem(
-                                value: items,
-                                child: Text(items),
-                              );
-                            }).toList(),
-                            value: deliveryType,
-                            hint: const Text("Select Delivery Type"),
-                            icon: const Icon(Icons.keyboard_arrow_down),
-                            onChanged: (value) {
-                              setState(() {
-                                deliveryType = value as String;
-                              });
-                            },
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 150,
-                        ),
-                        Container(
-                          height: 30,
-                          child: DropdownButton(
-                            items: <String>[
-                              'Received',
-                              'Scheduling',
-                              'Scheduled',
-                              'Delivering',
-                              'Delivered',
-                            ].map((String items) {
-                              return DropdownMenuItem(
-                                value: items,
-                                child: Text(items),
-                              );
-                            }).toList(),
-                            value: status,
-                            hint: const Text("status"),
-                            icon: const Icon(Icons.keyboard_arrow_down),
-                            onChanged: (value) {
-                              setState(() {
-                                status = value as String;
-                              });
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(
-                          230,
-                          242,
-                          255,
-                          1,
-                        ),
-                        borderRadius: BorderRadius.circular(8),
                       ),
-                      alignment: Alignment.center,
-                      height: 30,
-                      width: 70,
-                      child: GestureDetector(
-                        onTap: () {
-                          if (_formKey.currentState!.validate()) {
-                            setState(() {
-                              isLoading = !isLoading;
-                            });
-                            getLocation();
-                          }
-                        },
-                        child: Text("Submit"),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
       ),
@@ -416,7 +451,8 @@ class _ParcelInfoScreenState extends State<ParcelInfoScreen> {
           "employee": widget.employeeID,
         };
         try {
-          var response = await Dio().post("http://localhost:1337/api/parcels",
+          var response = await Dio().post(
+              "https://idms.backend.eastdevs.com/api/parcels",
               data: <String, Map<String, dynamic>>{'data': formData});
           print(response.data);
           setState(() {

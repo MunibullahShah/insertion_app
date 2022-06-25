@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:insertion_app/models/ParcelModel.dart';
 
@@ -93,51 +94,60 @@ class ApiServices {
   }
 
   trackParcel(String parcelID) async {
-    var response = await Dio()
-        .get("https://idms.backend.eastdevs.com/api/parcels/$parcelID");
-    print(response.data["data"]);
-    ParcelModel parcel = ParcelModel(
-        id: response.data["data"]['id'].toString(),
-        receiverName: response.data["data"]["attributes"]["receiverName"] == null
-            ? ""
-            : response.data["data"]["attributes"]["receiverName"],
-        longitude: response.data["data"]["attributes"]["longitude"] == null
-            ? 0
-            : response.data["data"]["attributes"]["longitude"],
-        latitude: response.data["data"]["attributes"]["latitude"] == null
-            ? 0
-            : response.data["data"]["attributes"]["longitude"],
-        sendingDate: "", //e["attributes"]["sendingDate"]
-        address: response.data["data"]["attributes"]["address"] == null
-            ? ""
-            : response.data["data"]["attributes"]["address"],
-        receiverContact: response.data["data"]["attributes"]["receiverContact"] == null
-            ? ""
-            : response.data["data"]["attributes"]["receiverContact"],
-        status: response.data["data"]["attributes"]["status"] == null
-            ? ""
-            : response.data["data"]["attributes"]["status"],
-        parcelWeight: response.data["data"]["attributes"]["parcelWeight"] == null
-            ? 0
-            : response.data["data"]["attributes"]["parcelWeight"],
-        senderName: response.data["data"]["attributes"]["senderName"] == null
-            ? ""
-            : response.data["data"]["attributes"]["senderName"],
-        senderContact: response.data["data"]["attributes"]["senderContact"] == null
-            ? ""
-            : response.data["data"]["attributes"]["senderContact"],
-        parcelType: response.data["data"]["attributes"]["type"] == null
-            ? ""
-            : response.data["data"]["attributes"]["type"],
-        size: response.data["data"]["attributes"]["size"] == null
-            ? ""
-            : response.data["data"]["attributes"]["size"],
-        deliveryType: response.data["data"]["attributes"]["deliveryType"] == null
-            ? ""
-            : response.data["data"]["attributes"]["deliveryType"],
-        destinationNo: response.data["data"]["attributes"]["destinationNo"] == null
-            ? 0
-            : int.parse(response.data["data"]["attributes"]["destinationNo"]));
-    return parcel;
+    try{
+      // var response = await Dio()
+      //     .get("https://idms.backend.eastdevs.com/api/parcels/$parcelID");
+
+      var response=await Dio()
+          .get("https://idms.backend.eastdevs.com/api/parcels/$parcelID");
+      print(response.data["data"]);
+      ParcelModel parcel = ParcelModel(
+          id: response.data["data"]['id'].toString(),
+          receiverName: response.data["data"]["attributes"]["receiverName"] == null
+              ? ""
+              : response.data["data"]["attributes"]["receiverName"],
+          longitude: response.data["data"]["attributes"]["longitude"] == null
+              ? 0
+              : response.data["data"]["attributes"]["longitude"],
+          latitude: response.data["data"]["attributes"]["latitude"] == null
+              ? 0
+              : response.data["data"]["attributes"]["longitude"],
+          sendingDate: "", //e["attributes"]["sendingDate"]
+          address: response.data["data"]["attributes"]["address"] == null
+              ? ""
+              : response.data["data"]["attributes"]["address"],
+          receiverContact: response.data["data"]["attributes"]["receiverContact"] == null
+              ? ""
+              : response.data["data"]["attributes"]["receiverContact"],
+          status: response.data["data"]["attributes"]["status"] == null
+              ? ""
+              : response.data["data"]["attributes"]["status"],
+          parcelWeight: response.data["data"]["attributes"]["parcelWeight"] == null
+              ? 0
+              : response.data["data"]["attributes"]["parcelWeight"],
+          senderName: response.data["data"]["attributes"]["senderName"] == null
+              ? ""
+              : response.data["data"]["attributes"]["senderName"],
+          senderContact: response.data["data"]["attributes"]["senderContact"] == null
+              ? ""
+              : response.data["data"]["attributes"]["senderContact"],
+          parcelType: response.data["data"]["attributes"]["type"] == null
+              ? ""
+              : response.data["data"]["attributes"]["type"],
+          size: response.data["data"]["attributes"]["size"] == null
+              ? ""
+              : response.data["data"]["attributes"]["size"],
+          deliveryType: response.data["data"]["attributes"]["deliveryType"] == null
+              ? ""
+              : response.data["data"]["attributes"]["deliveryType"],
+          destinationNo: response.data["data"]["attributes"]["destinationNo"] == null
+              ? 0
+              : int.parse(response.data["data"]["attributes"]["destinationNo"]));
+      return parcel;
+    }on DioError catch(e){
+      print("Error Hello");
+      Fluttertoast.showToast(msg: "Parcel not Found");
+      return 0;
+    }
   }
 }
