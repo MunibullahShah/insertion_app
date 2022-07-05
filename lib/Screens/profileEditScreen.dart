@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:insertion_app/Screens/ProfileScreen.dart';
+import 'package:insertion_app/Widgets/appButton.dart';
 import 'package:insertion_app/Widgets/inputContainer.dart';
 import 'package:insertion_app/constants.dart';
 import 'package:insertion_app/models/employee.dart';
@@ -142,23 +143,9 @@ class _EditScreenState extends State<EditScreen> {
                             const SizedBox(
                               height: 10,
                             ),
-                            GestureDetector(
-                              child: Container(
-                                height: 30,
-                                width: 70,
-                                decoration: BoxDecoration(
-                                  color: Color.fromRGBO(
-                                    230,
-                                    242,
-                                    255,
-                                    1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                alignment: Alignment.center,
-                                child: Text("Submit"),
-                              ),
-                              onTap: () {
+                            appButton(
+                              "Submit",
+                              () {
                                 if (_formKey.currentState!.validate()) {
                                   setState(() {
                                     isLoading = true;
