@@ -9,6 +9,7 @@ import 'package:insertion_app/Screens/login.dart';
 import 'package:insertion_app/Widgets/appButton.dart';
 import 'package:insertion_app/Widgets/informationContainer.dart';
 import 'package:insertion_app/services/api_services.dart';
+import 'package:intl/intl.dart';
 import '../Widgets/inputContainer.dart';
 import '../apiClasses/OSM_API_CLASS_entity.dart';
 import '../apiClasses/parcel_info_api_entity.dart';
@@ -283,13 +284,151 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
                                                       const SizedBox(
                                                         height: 20,
                                                       ),
-                                                      InputContainer(
-                                                        label:
-                                                            "Receiver Address",
-                                                        controller:
-                                                            receiverAddressController,
-                                                        hintText: "Address",
-                                                      ),
+                                                      isFound
+                                                          ? InputContainer(
+                                                              label:
+                                                                  "Receiver Address",
+                                                              controller:
+                                                                  receiverAddressController,
+                                                              hintText:
+                                                                  "Address",
+                                                            )
+                                                          : Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .spaceEvenly,
+                                                              children: [
+                                                                Container(
+                                                                  //height: 43,
+                                                                  width: 120,
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Text(
+                                                                          "Lat: "),
+                                                                      Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              Color.fromRGBO(
+                                                                            230,
+                                                                            242,
+                                                                            255,
+                                                                            1,
+                                                                          ),
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(8),
+                                                                        ),
+                                                                        width:
+                                                                            80,
+                                                                        height:
+                                                                            40,
+                                                                        alignment:
+                                                                            Alignment.center,
+                                                                        child:
+                                                                            TextFormField(
+                                                                          minLines:
+                                                                              1,
+                                                                          controller:
+                                                                              latitudeController,
+                                                                          validator:
+                                                                              (value) {
+                                                                            if (value == null ||
+                                                                                value.isEmpty) {
+                                                                              return 'Required';
+                                                                            }
+                                                                          },
+                                                                          textAlignVertical:
+                                                                              TextAlignVertical.center,
+                                                                          style:
+                                                                              TextStyle(fontSize: 14),
+                                                                          decoration:
+                                                                              InputDecoration(
+                                                                            hintText:
+                                                                                "0.000",
+                                                                            border:
+                                                                                OutlineInputBorder(
+                                                                              borderRadius: BorderRadius.circular(8),
+                                                                              borderSide: BorderSide.none,
+                                                                            ),
+                                                                            contentPadding:
+                                                                                EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+                                                                          ),
+                                                                        ),
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: 10,
+                                                                ),
+                                                                Container(
+                                                                  //height: 43,
+                                                                  width: 120,
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .spaceBetween,
+                                                                    children: [
+                                                                      Text(
+                                                                          "Long: "),
+                                                                      Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              Color.fromRGBO(
+                                                                            230,
+                                                                            242,
+                                                                            255,
+                                                                            1,
+                                                                          ),
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(8),
+                                                                        ),
+                                                                        width:
+                                                                            80,
+                                                                        height:
+                                                                            50,
+                                                                        alignment:
+                                                                            Alignment.center,
+                                                                        child:
+                                                                            TextFormField(
+                                                                          minLines:
+                                                                              1,
+                                                                          controller:
+                                                                              longitudeController,
+                                                                          validator:
+                                                                              (value) {
+                                                                            if (value == null ||
+                                                                                value.isEmpty) {
+                                                                              return 'Required';
+                                                                            }
+                                                                          },
+                                                                          textAlignVertical:
+                                                                              TextAlignVertical.center,
+                                                                          style:
+                                                                              TextStyle(fontSize: 14),
+                                                                          decoration:
+                                                                              InputDecoration(
+                                                                            hintText:
+                                                                                "0.000",
+                                                                            border:
+                                                                                OutlineInputBorder(
+                                                                              borderRadius: BorderRadius.circular(8),
+                                                                              borderSide: BorderSide.none,
+                                                                            ),
+                                                                            contentPadding:
+                                                                                EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+                                                                          ),
+                                                                        ),
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
                                                     ],
                                                   ),
                                                 ],
@@ -471,7 +610,9 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
       _osmapiclassEntity =
           OSMAPICLASSEntity.fromJson(jsonDecode(response.body));
       if (_osmapiclassEntity.features.isEmpty && isFound) {
+        Fluttertoast.showToast(msg: "Failed! Enter Latitude, Longitude");
         setState(() {
+          isLoading = false;
           isFound = false;
         });
         return;
@@ -494,15 +635,21 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
 
   sendData() async {
     try {
+      DateTime now = DateTime.now();
+      // DateTime date = new DateTime(now.year, now.month, now.day);
+      // String today = "${now.year}-${now.month}-${now.day}";
+
+      String formatter = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      print("DAAAATTTTEEEEE: $formatter");
       if (!isFound) {
-        apiEntity.data.longitude = double.parse(longitudeController.text);
-        apiEntity.data.latitude = double.parse(latitudeController.text);
+        longitude = double.parse(longitudeController.text);
+        latitude = double.parse(latitudeController.text);
       }
       if (longitude != null) {
         Map<String, dynamic> formData = {
           "senderName": senderNameController.text,
-          "longitude": latitude,
-          "latitude": longitude,
+          "longitude": longitude,
+          "latitude": latitude,
           "address": receiverAddressController.text,
           "senderContact": senderPhoneController.text,
           "receiverContact": receiverPhoneController.text,
@@ -510,8 +657,9 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
           "receiverName": receiverNameController.text,
           "type": type.toString(),
           "parcelSize": parcelSize.toString(),
-          "parcelWeight": weightController.text,
+          "parcelWeight": 0,
           "status": status.toString(),
+          "sendingDate": formatter,
           "deliveryType": deliveryType.toString(),
           "employee": 1
         };
@@ -527,11 +675,11 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
           setState(() {
             isLoading = !isLoading;
           });
-        } catch (e) {
+        } on DioError catch (e) {
           setState(() {
             isLoading = !isLoading;
           });
-          print(e.toString());
+          print("rerererere   ${e.response?.data}");
           Fluttertoast.showToast(msg: "Failed");
           return 1;
         }
@@ -546,6 +694,7 @@ class _HomeScreenRequestScreenState extends State<HomeScreenRequestScreen> {
           longitudeController.clear();
           latitudeController.clear();
           trackingNoController.clear();
+          isFound = true;
         }
         return 1;
       }

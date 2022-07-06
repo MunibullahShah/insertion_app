@@ -41,6 +41,7 @@ dependencies:
   shared_preferences: ^2.0.13
   dio: ^4.0.4
   email_validator: ^2.0.1
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
